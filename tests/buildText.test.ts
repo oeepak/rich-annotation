@@ -3,20 +3,19 @@ import { buildText } from "../src/shared/buildText";
 import type { FieldSchema } from "../src/shared/types";
 
 const flatFields: FieldSchema[] = [
-  { name: "Event Type", type: "text", required: true },
-  { name: "Event Key", type: "text", required: true },
+  { name: "Event Type", type: "text" },
+  { name: "Event Key", type: "text" },
 ];
 
 const withGroup: FieldSchema[] = [
-  { name: "Event Type", type: "text", required: true },
-  { name: "Event Key", type: "text", required: true },
+  { name: "Event Type", type: "text" },
+  { name: "Event Key", type: "text" },
   {
     name: "Params",
     type: "group",
-    required: false,
     children: [
-      { name: "order", type: "text", required: false },
-      { name: "id", type: "text", required: false },
+      { name: "order", type: "text" },
+      { name: "id", type: "text" },
     ],
   },
 ];
@@ -29,20 +28,9 @@ describe("buildText", () => {
     );
   });
 
-  it("omits empty optional fields", () => {
-    const fields: FieldSchema[] = [
-      { name: "Event Type", type: "text", required: true },
-      { name: "Note", type: "text", required: false },
-    ];
-    const values = { "Event Type": "Click", Note: "" };
-    expect(buildText(fields, values)).toBe("Event Type\n- Click");
-  });
-
-  it("keeps empty required fields", () => {
-    const values = { "Event Type": "", "Event Key": "test" };
-    expect(buildText(flatFields, values)).toBe(
-      "Event Type\n- \n\nEvent Key\n- test"
-    );
+  it("omits empty fields", () => {
+    const values = { "Event Type": "Click", "Event Key": "" };
+    expect(buildText(flatFields, values)).toBe("Event Type\n- Click");
   });
 
   it("builds group fields with sub key: sub value", () => {
@@ -56,7 +44,7 @@ describe("buildText", () => {
     );
   });
 
-  it("omits group when all children are empty and group is optional", () => {
+  it("omits group when all children are empty", () => {
     const values = {
       "Event Type": "Click",
       "Event Key": "click_banner",

@@ -16,15 +16,15 @@ export function buildText(
       const childLines: string[] = [];
       for (const child of children) {
         const v = groupValues[child.name] ?? "";
-        if (v === "" && !child.required) continue;
+        if (v === "") continue;
         childLines.push(`- ${child.name}: ${v}`);
       }
 
-      if (childLines.length === 0 && !field.required) continue;
+      if (childLines.length === 0) continue;
       blocks.push(`${field.name}\n${childLines.join("\n")}`);
     } else {
       const value = (values[field.name] ?? "") as string;
-      if (value === "" && !field.required) continue;
+      if (value === "") continue;
       blocks.push(`${field.name}\n- ${value}`);
     }
   }

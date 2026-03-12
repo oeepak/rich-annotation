@@ -9,11 +9,7 @@ export function validateField(
   rawValue: string,
   schema: FieldSchema
 ): ValidationResult {
-  if (rawValue === "" && schema.required) {
-    return { parsedValue: null, matched: false };
-  }
-
-  if (rawValue === "" && !schema.required) {
+  if (rawValue === "") {
     return { parsedValue: "", matched: true };
   }
 

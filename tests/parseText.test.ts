@@ -3,19 +3,18 @@ import { parseText } from "../src/shared/parseText";
 import type { FieldSchema } from "../src/shared/types";
 
 const flatFields: FieldSchema[] = [
-  { name: "Event Type", type: "text", required: true },
-  { name: "Event Key", type: "text", required: true },
+  { name: "Event Type", type: "text" },
+  { name: "Event Key", type: "text" },
 ];
 
 const withGroup: FieldSchema[] = [
-  { name: "Event Type", type: "text", required: true },
+  { name: "Event Type", type: "text" },
   {
     name: "Params",
     type: "group",
-    required: false,
     children: [
-      { name: "order", type: "number", required: false },
-      { name: "id", type: "text", required: false },
+      { name: "order", type: "number" },
+      { name: "id", type: "text" },
     ],
   },
 ];
@@ -43,10 +42,10 @@ describe("parseText", () => {
     });
   });
 
-  it("returns not_matched for missing required field", () => {
+  it("returns matched for missing field (treated as empty)", () => {
     const text = "Event Key\n- test";
     const result = parseText(text, flatFields);
-    expect(result.parseMatch).toBe("not_matched");
+    expect(result.parseMatch).toBe("matched");
   });
 
   it("returns empty for missing optional group", () => {

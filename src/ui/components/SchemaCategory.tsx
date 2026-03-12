@@ -1,6 +1,6 @@
 import React from "react";
 import type { CategorySchema, FieldSchema } from "@shared/types";
-import { SchemaFieldRow, FieldOptionsEditor } from "./SchemaFieldRow";
+import { SchemaFieldRow } from "./SchemaFieldRow";
 
 interface SchemaCategoryProps {
   schema: CategorySchema;
@@ -13,7 +13,7 @@ export function SchemaCategory({ schema, onChange }: SchemaCategoryProps) {
       ...schema,
       fields: [
         ...schema.fields,
-        { name: "", type: "text", required: false },
+        { name: "", type: "text" },
       ],
     });
   };
@@ -38,17 +38,12 @@ export function SchemaCategory({ schema, onChange }: SchemaCategoryProps) {
         </button>
       </div>
       {schema.fields.map((field, i) => (
-        <div key={i}>
-          <SchemaFieldRow
-            field={field}
-            onChange={(f) => updateField(i, f)}
-            onDelete={() => deleteField(i)}
-          />
-          <FieldOptionsEditor
-            field={field}
-            onChange={(f) => updateField(i, f)}
-          />
-        </div>
+        <SchemaFieldRow
+          key={i}
+          field={field}
+          onChange={(f) => updateField(i, f)}
+          onDelete={() => deleteField(i)}
+        />
       ))}
       {schema.fields.length === 0 && (
         <div style={{ fontSize: 11, color: "#999", padding: 8 }}>

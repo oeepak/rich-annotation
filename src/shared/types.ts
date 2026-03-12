@@ -3,7 +3,6 @@ export type FieldType = "text" | "number" | "boolean" | "select" | "group";
 export interface FieldSchema {
   name: string;
   type: FieldType;
-  required: boolean;
   options?: string[];       // for select type
   children?: FieldSchema[]; // for group type — only flat children (no nested groups)
 }

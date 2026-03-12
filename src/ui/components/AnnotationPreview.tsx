@@ -14,7 +14,7 @@ export function AnnotationPreview({ text, parsedFields }: AnnotationPreviewProps
 
   return (
     <div className="section">
-      <div className="section-label">Annotation Text</div>
+      <div className="section-label">Preview</div>
       <div className="preview-box">
         {lines.map((line, i) => {
           const trimmed = line.trim();

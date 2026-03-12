@@ -11,53 +11,43 @@ const fieldTypes: FieldType[] = ["text", "number", "boolean", "select", "group"]
 
 export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProps) {
   return (
-    <div className="schema-field-row">
-      <input
-        className="input"
-        placeholder="field name"
-        value={field.name}
-        onChange={(e) => onChange({ ...field, name: e.target.value })}
-        style={{ flex: 2 }}
-      />
-      <select
-        className="select"
-        value={field.type}
-        onChange={(e) => {
-          const newType = e.target.value as FieldType;
-          onChange({
-            ...field,
-            type: newType,
-            options: newType === "select" ? field.options ?? [""] : undefined,
-            children: newType === "group" ? field.children ?? [{ name: "", type: "text", required: false }] : undefined,
-          });
-        }}
-        style={{ flex: 1 }}
-      >
-        {fieldTypes.map((t) => (
-          <option key={t} value={t}>{t}</option>
-        ))}
-      </select>
-      <label style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11 }}>
+    <div>
+      <div className="schema-field-row">
         <input
-          type="checkbox"
-          checked={field.required}
-          onChange={(e) => onChange({ ...field, required: e.target.checked })}
+          className="input"
+          placeholder="field name"
+          value={field.name}
+          onChange={(e) => onChange({ ...field, name: e.target.value })}
+          style={{ flex: 2 }}
         />
-        req
-      </label>
-      <button className="btn btn-danger" onClick={onDelete} style={{ padding: "2px 6px" }}>
-        ×
-      </button>
+        <select
+          className="select"
+          value={field.type}
+          onChange={(e) => {
+            const newType = e.target.value as FieldType;
+            onChange({
+              ...field,
+              type: newType,
+              options: newType === "select" ? field.options ?? [""] : undefined,
+              children: newType === "group" ? field.children ?? [{ name: "", type: "text" }] : undefined,
+            });
+          }}
+          style={{ flex: 1 }}
+        >
+          {fieldTypes.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+        <button className="btn btn-danger" onClick={onDelete}>
+          ×
+        </button>
+      </div>
+      <FieldOptionsEditor field={field} onChange={onChange} />
     </div>
   );
 }
 
-interface FieldOptionsEditorProps {
-  field: FieldSchema;
-  onChange: (updated: FieldSchema) => void;
-}
-
-export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps) {
+function FieldOptionsEditor({ field, onChange }: { field: FieldSchema; onChange: (updated: FieldSchema) => void }) {
   if (field.type === "select") {
     return (
       <div style={{ marginLeft: 8, marginBottom: 4 }}>
@@ -85,7 +75,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
     const addChild = () => {
       onChange({
         ...field,
-        children: [...children, { name: "", type: "text", required: false }],
+        children: [...children, { name: "", type: "text" }],
       });
     };
 
@@ -129,15 +119,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
                   <option key={t} value={t}>{t}</option>
                 ))}
               </select>
-              <label style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11 }}>
-                <input
-                  type="checkbox"
-                  checked={child.required}
-                  onChange={(e) => updateChild(i, { ...child, required: e.target.checked })}
-                />
-                req
-              </label>
-              <button className="btn btn-danger" onClick={() => deleteChild(i)} style={{ padding: "2px 6px" }}>
+              <button className="btn btn-danger" onClick={() => deleteChild(i)}>
                 ×
               </button>
             </div>
@@ -160,11 +142,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
             )}
           </div>
         ))}
-        <button
-          className="btn btn-secondary"
-          onClick={addChild}
-          style={{ fontSize: 10, padding: "2px 8px" }}
-        >
+        <button className="btn btn-secondary" onClick={addChild} style={{ fontSize: 10 }}>
           + Child
         </button>
       </div>

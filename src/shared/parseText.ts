@@ -27,10 +27,6 @@ export function parseText(
     const bodyLines = blockMap.get(schema.name);
 
     if (!bodyLines || bodyLines.length === 0) {
-      if (schema.required) {
-        allMatched = false;
-        return { name: schema.name, rawValue: "", parsedValue: null, matched: false };
-      }
       return { name: schema.name, rawValue: "", parsedValue: "", matched: true };
     }
 
