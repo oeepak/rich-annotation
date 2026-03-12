@@ -1,0 +1,28 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Tracking                                [+ Add]  |
+| [action_________] [text v]   [required] [Delete] |
+| [source_________] [text v]   [required] [Delete] |
+| [owner__________] [text v]   [optional] [Delete] |
+| [screen_________] [text v]   [optional] [Delete] |
++--------------------------------------------------+
+| Experiment                              [+ Add]  |
+| [experiment_id__] [text v]   [required] [Delete] |
+| [variant________] [select v] [required] [Delete] |
+|   options: A, B, C                               |
+| [surface________] [text v]   [optional] [Delete] |
+| [enabled________] [boolean v] [optional] [Delete]|
++--------------------------------------------------+
+| QA                                      [+ Add]  |
+| [status_________] [select v] [required] [Delete] |
+|   options: open, blocked, done                   |
+| [owner__________] [text v]   [optional] [Delete] |
+| [note___________] [text v]   [optional] [Delete] |
+|   input: multiline                               |
++--------------------------------------------------+
+|                      Used to build / parse text  |
+|                             [Reset] [Save]       |
++--------------------------------------------------+

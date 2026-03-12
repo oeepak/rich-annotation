@@ -1,0 +1,19 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Page: Home                        24 annotations |
+| [Search categories, nodes, fields.........]      |
+| [All Categories v]                      [Export] |
++--------------------------------------------------+
+| [Tracking] Signup Button                [Open]   |
+|            action: signup                        |
+|            source: hero_cta                      |
++--------------------------------------------------+
+| [Experiment] Pricing Modal             [Open]    |
+|              experiment_id: paywall_copy         |
+|              variant: B                          |
++--------------------------------------------------+
+| [.... more rows .............................. ] |
++--------------------------------------------------+

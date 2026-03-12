@@ -1,0 +1,32 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Node: Pricing Modal                              |
+| Frame / Modal / id: 123:456            [Locate]  |
++--------------------------------------------------+
+| Annotation Category                              |
+| [Experiment v]                                   |
+|                                                  |
+| Schema Match                                      |
+| [Not matched to Experiment schema]               |
+| [red] could not parse: variant, enabled          |
+|                                                  |
+| Experiment Fields                                |
+| experiment_id *                                  |
+| [paywall_copy_test___________________________]   |
+| variant *                                        |
+| [_______________________________]                |
+| enabled                                           |
+| [_______________________________]                |
++--------------------------------------------------+
+| Annotation Text                                  |
+| Experiment                                       |
+| experiment_id: paywall_copy_test                 |
+| variant: hoho                                    |
+| enabled: maybe                                   |
+| [red] invalid values are highlighted in red      |
++--------------------------------------------------+
+| [Edit Raw Text] [Delete]                [Apply]  |
++--------------------------------------------------+

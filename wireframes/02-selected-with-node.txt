@@ -1,0 +1,33 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Node: Pricing Modal                              |
+| Frame / Modal / id: 123:456            [Locate]  |
++--------------------------------------------------+
+| Annotation Category                              |
+| [Experiment v]                                   |
+|                                                  |
+| Schema Match                                      |
+| [Matched to Experiment schema]                   |
+|                                                  |
+| Experiment Fields                                |
+| experiment_id *                                  |
+| [paywall_copy_test___________________________]   |
+| variant *                                        |
+| [B v]                                            |
+| surface                                           |
+| [pricing_modal_______________________________]   |
+| enabled                                           |
+| [true v]                                         |
++--------------------------------------------------+
+| Annotation Text                                  |
+| Experiment                                       |
+| experiment_id: paywall_copy_test                 |
+| variant: B                                       |
+| surface: pricing_modal                           |
+| enabled: true                                    |
++--------------------------------------------------+
+| [Edit Raw Text] [Delete]                [Apply]  |
++--------------------------------------------------+

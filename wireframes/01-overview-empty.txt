@@ -1,0 +1,16 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Page: Home                         0 annotations |
+| [Search annotations, nodes, fields.........]     |
+| [All Categories v]                      [Export] |
++--------------------------------------------------+
+| No annotations on this page                      |
+|                                                  |
+| Select a node and create a category-based        |
+| annotation from the Selected tab.                |
+|                                                  |
+|                             [Go to Selected]     |
++--------------------------------------------------+

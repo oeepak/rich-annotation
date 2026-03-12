@@ -1,0 +1,18 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Node: QA Note Layer                              |
+| Text / Layer / id: 456:789             [Locate]  |
++--------------------------------------------------+
+| Annotation Category                              |
+| [QA v]                                           |
+|                                                  |
+| No schema for this category                      |
+|                                                  |
+| This category exists in Figma annotations,       |
+| but Rich Annotation has no schema for it yet.    |
+|                                                  |
+|                         [Go to Schema] [Raw Text]|
++--------------------------------------------------+

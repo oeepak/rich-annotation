@@ -1,0 +1,22 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| Node: Pricing Modal                              |
+| Frame / Modal / id: 123:456            [Locate]  |
++--------------------------------------------------+
+| Annotation Category                              |
+| [Experiment v]                                   |
+|                                                  |
+| Raw Text Mode                                     |
+| [Experiment___________________________________]  |
+| [experiment_id: paywall_copy_test_____________]  |
+| [variant: B___________________________________]  |
+| [surface: pricing_modal_______________________]  |
+| [enabled: true________________________________]  |
+|                                                  |
+| Leave raw text as-is or apply schema parsing.    |
++--------------------------------------------------+
+| [Back to Fields] [Delete]               [Apply]  |
++--------------------------------------------------+

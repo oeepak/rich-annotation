@@ -1,0 +1,14 @@
++--------------------------------------------------+
+| Rich Annotation                                  |
++--------------------------------------------------+
+| [Overview] [Selected] [Schema]                  |
++--------------------------------------------------+
+| No node selected                                 |
+|                                                  |
+| Select one layer, frame, or component in Figma   |
+| to create or edit a structured annotation.       |
+|                                                  |
+| Then choose a category and fill its schema.      |
+|                                                  |
+|                           [Go to Overview]       |
++--------------------------------------------------+
