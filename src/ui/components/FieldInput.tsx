@@ -8,6 +8,13 @@ interface FieldInputProps {
   onChange: (value: string) => void;
 }
 
+interface GroupFieldInputProps {
+  schema: FieldSchema;
+  values: Record<string, string>;
+  childMatches: Record<string, boolean>;
+  onChildChange: (childName: string, value: string) => void;
+}
+
 export function FieldInput({ schema, value, matched, onChange }: FieldInputProps) {
   const errorClass = !matched && value !== "" ? " error" : "";
 
@@ -25,9 +32,7 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
         >
           <option value="">—</option>
           {(schema.options ?? []).map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
+            <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
       </div>
@@ -55,23 +60,6 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
   }
 
   // text or number
-  if (schema.type === "text" && schema.multiline) {
-    return (
-      <div className="field-group">
-        <div className="field-label">
-          {schema.name}
-          {schema.required && <span className="required"> *</span>}
-        </div>
-        <textarea
-          className={`input${errorClass}`}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          rows={3}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="field-group">
       <div className="field-label">
@@ -84,6 +72,28 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
+    </div>
+  );
+}
+
+export function GroupFieldInput({ schema, values, childMatches, onChildChange }: GroupFieldInputProps) {
+  return (
+    <div className="field-group">
+      <div className="field-label">
+        {schema.name}
+        {schema.required && <span className="required"> *</span>}
+      </div>
+      <div style={{ marginLeft: 12 }}>
+        {(schema.children ?? []).map((child) => (
+          <FieldInput
+            key={child.name}
+            schema={child}
+            value={values[child.name] ?? ""}
+            matched={childMatches[child.name] ?? true}
+            onChange={(v) => onChildChange(child.name, v)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
