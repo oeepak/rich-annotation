@@ -35,6 +35,10 @@ export function validateField(
       return { parsedValue: null, matched: false };
     }
 
+    case "group": {
+      return { parsedValue: null, matched: true };
+    }
+
     case "select": {
       const options = schema.options ?? [];
       if (options.includes(rawValue)) {

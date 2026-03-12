@@ -65,4 +65,24 @@ describe("validateField", () => {
     const schema: FieldSchema = { name: "note", type: "text", required: false };
     expect(validateField("", schema)).toEqual({ parsedValue: "", matched: true });
   });
+
+  it("returns matched for group type", () => {
+    const schema: FieldSchema = {
+      name: "Params",
+      type: "group",
+      required: false,
+      children: [{ name: "order", type: "number", required: false }],
+    };
+    expect(validateField("order: 1", schema)).toEqual({ parsedValue: null, matched: true });
+  });
+
+  it("returns not matched for empty required group", () => {
+    const schema: FieldSchema = {
+      name: "Params",
+      type: "group",
+      required: true,
+      children: [{ name: "order", type: "number", required: false }],
+    };
+    expect(validateField("", schema)).toEqual({ parsedValue: null, matched: false });
+  });
 });
