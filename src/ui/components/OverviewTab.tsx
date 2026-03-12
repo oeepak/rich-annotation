@@ -1,0 +1,169 @@
+import React, { useState, useEffect } from "react";
+import type { AnnotationInfo, SchemaStore } from "@shared/types";
+import { OverviewRow } from "./OverviewRow";
+import { postToPlugin } from "../hooks/usePluginMessage";
+import type { TabId } from "./Tabs";
+
+interface OverviewTabProps {
+  annotations: AnnotationInfo[];
+  schemas: SchemaStore;
+  onNavigate: (tab: TabId) => void;
+}
+
+export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabProps) {
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+
+  useEffect(() => {
+    postToPlugin({ type: "GET_ANNOTATIONS" });
+  }, []);
+
+  // Collect unique categories from annotations
+  const categoryIds = Array.from(
+    new Set(annotations.map((a) => a.categoryId).filter(Boolean))
+  ) as string[];
+
+  // Filter
+  let filtered = annotations;
+
+  if (categoryFilter) {
+    filtered = filtered.filter((a) => a.categoryId === categoryFilter);
+  }
+
+  if (search) {
+    const q = search.toLowerCase();
+    filtered = filtered.filter((a) => {
+      if (a.nodeName.toLowerCase().includes(q)) return true;
+      if (a.categoryLabel.toLowerCase().includes(q)) return true;
+      if (a.label.toLowerCase().includes(q)) return true;
+      if (a.parsedFields.some((f) =>
+        f.name.toLowerCase().includes(q) ||
+        f.rawValue.toLowerCase().includes(q)
+      )) return true;
+      return false;
+    });
+  }
+
+  const handleExport = (format: "json" | "csv") => {
+    let content: string;
+    let mimeType: string;
+    let filename: string;
+
+    if (format === "json") {
+      const data = filtered.map((a) => ({
+        nodeId: a.nodeId,
+        nodeName: a.nodeName,
+        nodeType: a.nodeType,
+        category: a.categoryLabel,
+        annotationText: a.label,
+        fields: Object.fromEntries(
+          a.parsedFields.map((f) => [f.name, { raw: f.rawValue, parsed: f.parsedValue, matched: f.matched }])
+        ),
+        parseMatch: a.parseMatch,
+      }));
+      content = JSON.stringify(data, null, 2);
+      mimeType = "application/json";
+      filename = "annotations.json";
+    } else {
+      const headers = ["nodeId", "nodeName", "nodeType", "category", "annotationText", "parseMatch"];
+      // Add field columns from schemas
+      const fieldNames = new Set<string>();
+      filtered.forEach((a) => a.parsedFields.forEach((f) => fieldNames.add(f.name)));
+      const allFieldNames = Array.from(fieldNames);
+
+      const rows = filtered.map((a) => {
+        const base = [a.nodeId, a.nodeName, a.nodeType, a.categoryLabel, `"${a.label.replace(/"/g, '""')}"`, a.parseMatch];
+        const fieldVals = allFieldNames.map((fn) => {
+          const f = a.parsedFields.find((pf) => pf.name === fn);
+          return f ? f.rawValue : "";
+        });
+        return [...base, ...fieldVals].join(",");
+      });
+
+      content = [[...headers, ...allFieldNames].join(","), ...rows].join("\n");
+      mimeType = "text/csv";
+      filename = "annotations.csv";
+    }
+
+    // Download via blob
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  if (annotations.length === 0) {
+    return (
+      <div className="tab-content">
+        <div className="toolbar">
+          <span style={{ fontSize: 11, color: "#999" }}>0 annotations</span>
+        </div>
+        <div className="empty-state">
+          <div style={{ fontWeight: 500 }}>No annotations on this page</div>
+          <div>
+            Select a node and create a category-based annotation from the
+            Selected tab.
+          </div>
+          <button
+            className="btn btn-secondary"
+            onClick={() => onNavigate("selected")}
+            style={{ marginTop: 8 }}
+          >
+            Go to Selected
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="tab-content">
+      <div className="toolbar">
+        <span style={{ fontSize: 11, color: "#999" }}>
+          {filtered.length} annotation{filtered.length !== 1 ? "s" : ""}
+        </span>
+        <div style={{ display: "flex", gap: 4 }}>
+          <button className="btn btn-secondary" onClick={() => handleExport("json")} style={{ fontSize: 10 }}>
+            JSON
+          </button>
+          <button className="btn btn-secondary" onClick={() => handleExport("csv")} style={{ fontSize: 10 }}>
+            CSV
+          </button>
+        </div>
+      </div>
+
+      <div className="search-bar">
+        <input
+          className="input"
+          placeholder="Search annotations, nodes, fields..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ flex: 1 }}
+        />
+        <select
+          className="select"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          style={{ width: 120 }}
+        >
+          <option value="">All Categories</option>
+          {categoryIds.map((catId) => {
+            const label = schemas[catId]?.categoryLabel ?? catId;
+            return (
+              <option key={catId} value={catId}>
+                {label}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+
+      {filtered.map((ann, i) => (
+        <OverviewRow key={`${ann.nodeId}-${ann.categoryId}-${i}`} annotation={ann} />
+      ))}
+    </div>
+  );
+}
