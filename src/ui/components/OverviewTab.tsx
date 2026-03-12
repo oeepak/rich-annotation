@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import type { AnnotationInfo, SchemaStore } from "@shared/types";
 import { OverviewRow } from "./OverviewRow";
 import { postToPlugin } from "../hooks/usePluginMessage";
-import type { TabId } from "./Tabs";
 
 interface OverviewTabProps {
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
   categories: { id: string; label: string; color: string }[];
-  onNavigate: (tab: TabId) => void;
+  onEdit: (nodeId: string) => void;
 }
 
-export function OverviewTab({ annotations, schemas, categories, onNavigate }: OverviewTabProps) {
+export function OverviewTab({ annotations, schemas, categories, onEdit }: OverviewTabProps) {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
 
@@ -115,13 +114,9 @@ export function OverviewTab({ annotations, schemas, categories, onNavigate }: Ov
             Select a node and create a category-based annotation from the
             Selected tab.
           </div>
-          <button
-            className="btn btn-secondary"
-            onClick={() => onNavigate("selected")}
-            style={{ marginTop: 8 }}
-          >
-            Go to Selected
-          </button>
+          <div style={{ fontSize: 11, marginTop: 4 }}>
+            Select a node in Figma to create one.
+          </div>
         </div>
       </div>
     );
@@ -176,10 +171,7 @@ export function OverviewTab({ annotations, schemas, categories, onNavigate }: Ov
             key={`${ann.nodeId}-${ann.categoryId}-${i}`}
             annotation={ann}
             categoryColor={cat?.color}
-            onEdit={() => {
-              postToPlugin({ type: "SELECT_NODE", nodeId: ann.nodeId });
-              onNavigate("selected");
-            }}
+            onEdit={() => onEdit(ann.nodeId)}
           />
         );
       })}

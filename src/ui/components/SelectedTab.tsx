@@ -5,16 +5,15 @@ import { AnnotationPreview } from "./AnnotationPreview";
 import { RawTextEditor } from "./RawTextEditor";
 import { useSelectionFields } from "../hooks/useSelection";
 import { postToPlugin } from "../hooks/usePluginMessage";
-import type { TabId } from "./Tabs";
 
 interface SelectedTabProps {
-  nodeId: string | null;
+  nodeId: string;
   nodeName: string;
   nodeType: string;
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
   categories: { id: string; label: string; color: string }[];
-  onNavigate: (tab: TabId) => void;
+  onGoToSchema: () => void;
 }
 
 export function SelectedTab({
@@ -24,13 +23,12 @@ export function SelectedTab({
   annotations,
   schemas,
   categories,
-  onNavigate,
+  onGoToSchema,
 }: SelectedTabProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [rawMode, setRawMode] = useState(false);
   const [rawText, setRawText] = useState("");
 
-  // Find current annotation for selected category
   const currentAnnotation = annotations.find(
     (a) => a.categoryId === selectedCategoryId
   );
@@ -44,39 +42,15 @@ export function SelectedTab({
       schemaFields: schema?.fields ?? [],
     });
 
-  // Auto-select first category if available
   useEffect(() => {
     if (!selectedCategoryId && annotations.length > 0 && annotations[0].categoryId) {
       setSelectedCategoryId(annotations[0].categoryId);
     }
   }, [annotations, selectedCategoryId]);
 
-  // Sync raw text
   useEffect(() => {
     setRawText(currentLabel);
   }, [currentLabel]);
-
-  if (!nodeId) {
-    return (
-      <div className="tab-content">
-        <div className="empty-state">
-          <div style={{ fontWeight: 600 }}>No node selected</div>
-          <div>
-            Select one layer, frame, or component in Figma to create or edit a
-            structured annotation.
-          </div>
-          <div>Then choose a category and fill its schema.</div>
-          <button
-            className="btn btn-secondary"
-            onClick={() => onNavigate("overview")}
-            style={{ marginTop: 8 }}
-          >
-            Go to Overview
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const handleApply = () => {
     if (!nodeId || !selectedCategoryId) return;
@@ -100,12 +74,6 @@ export function SelectedTab({
     });
   };
 
-  const handleLocate = () => {
-    if (nodeId) {
-      postToPlugin({ type: "SELECT_NODE", nodeId });
-    }
-  };
-
   const parseMatch = currentAnnotation?.parseMatch ?? "no_schema";
   const hasSchema = !!schema;
 
@@ -115,17 +83,14 @@ export function SelectedTab({
         {/* Node Info */}
         <div className="section">
           <div style={{ fontWeight: 600 }}>{nodeName}</div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#999" }}>
-            <span>{nodeType} / id: {nodeId}</span>
-            <button className="btn btn-secondary" onClick={handleLocate} style={{ padding: "2px 8px", fontSize: 10 }}>
-              Locate
-            </button>
+          <div style={{ fontSize: 11, color: "#999" }}>
+            {nodeType} / {nodeId}
           </div>
         </div>
 
         {/* Category Selection */}
         <div className="section">
-          <div className="section-label">Annotation Category</div>
+          <div className="section-label">Category</div>
           <select
             className="select"
             value={selectedCategoryId}
@@ -144,16 +109,14 @@ export function SelectedTab({
         </div>
 
         {selectedCategoryId && !hasSchema && (
-          /* No Schema State */
           <div className="section">
             <div style={{ fontWeight: 500, marginBottom: 4 }}>No schema for this category</div>
             <div style={{ fontSize: 11, color: "#999", marginBottom: 8 }}>
-              This category exists in Figma annotations, but Rich Annotation has
-              no schema for it yet.
+              Define a schema to use structured fields.
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              <button className="btn btn-secondary" onClick={() => onNavigate("schema")}>
-                Go to Schema
+              <button className="btn btn-secondary" onClick={onGoToSchema}>
+                Schema
               </button>
               <button className="btn btn-secondary" onClick={() => setRawMode(true)}>
                 Raw Text
@@ -164,15 +127,11 @@ export function SelectedTab({
 
         {selectedCategoryId && hasSchema && !rawMode && (
           <>
-            {/* Schema Match Status */}
-            <div className="section">
-              <div className="section-label">Schema Match</div>
-              <span className={`badge badge-${parseMatch.replace("_", "-")}`}>
-                {parseMatch === "matched"
-                  ? `Matched to ${schema.categoryLabel} schema`
-                  : `Not matched to ${schema.categoryLabel} schema`}
-              </span>
-              {parseMatch === "not_matched" && (
+            {parseMatch === "not_matched" && (
+              <div className="section">
+                <span className="badge badge-not-matched">
+                  Not matched
+                </span>
                 <div style={{ fontSize: 11, color: "#d93025", marginTop: 4 }}>
                   could not parse:{" "}
                   {parsedFields
@@ -180,12 +139,17 @@ export function SelectedTab({
                     .map((f) => f.name)
                     .join(", ")}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Field Inputs */}
             <div className="section">
-              <div className="section-label">Fields</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="section-label">Fields</div>
+                <button className="btn btn-secondary" onClick={onGoToSchema} style={{ padding: "2px 8px", fontSize: 10 }}>
+                  Schema
+                </button>
+              </div>
               {schema.fields.map((field) => {
                 const parsed = parsedFields.find((p) => p.name === field.name);
 
@@ -220,7 +184,6 @@ export function SelectedTab({
               })}
             </div>
 
-            {/* Preview */}
             <AnnotationPreview text={previewText} parsedFields={parsedFields} />
           </>
         )}
@@ -238,7 +201,7 @@ export function SelectedTab({
                 className="btn btn-secondary"
                 onClick={() => setRawMode(!rawMode)}
               >
-                {rawMode ? "Back to Fields" : "Edit Raw Text"}
+                {rawMode ? "Fields" : "Raw"}
               </button>
             )}
             <button className="btn btn-danger" onClick={handleDelete}>

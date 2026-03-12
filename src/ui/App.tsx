@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { Tabs, TabId } from "./components/Tabs";
 import { OverviewTab } from "./components/OverviewTab";
 import { SelectedTab } from "./components/SelectedTab";
 import { SchemaTab } from "./components/SchemaTab";
@@ -7,8 +6,10 @@ import { usePluginMessage, postToPlugin } from "./hooks/usePluginMessage";
 import type { PluginMessage } from "@shared/messages";
 import type { SchemaStore, AnnotationInfo } from "@shared/types";
 
+type View = "auto" | "schema";
+
 export function App() {
-  const [activeTab, setActiveTab] = useState<TabId>("selected");
+  const [view, setView] = useState<View>("auto");
   const [schemas, setSchemas] = useState<SchemaStore>({});
   const [categories, setCategories] = useState<{ id: string; label: string; color: string }[]>([]);
 
@@ -28,6 +29,9 @@ export function App() {
         setSelectedNodeName(msg.nodeName);
         setSelectedNodeType(msg.nodeType);
         setSelectedAnnotations(msg.annotations);
+        setView("auto");
+        // Refresh overview annotations
+        postToPlugin({ type: "GET_ANNOTATIONS" });
         break;
       case "SCHEMAS_LOADED":
         setSchemas(msg.schemas);
@@ -47,46 +51,56 @@ export function App() {
 
   usePluginMessage(handleMessage);
 
-  const handleTabChange = (tab: TabId) => {
-    setActiveTab(tab);
-    if (tab === "overview") {
-      postToPlugin({ type: "GET_ANNOTATIONS" });
-    } else if (tab === "selected") {
-      postToPlugin({ type: "GET_SELECTION" });
-    } else if (tab === "schema") {
-      postToPlugin({ type: "GET_SCHEMAS" });
-      postToPlugin({ type: "GET_CATEGORIES" });
-    }
+  const goToSchema = () => {
+    postToPlugin({ type: "GET_SCHEMAS" });
+    postToPlugin({ type: "GET_CATEGORIES" });
+    setView("schema");
   };
 
-  return (
-    <div className="plugin-container">
-      <Tabs active={activeTab} onChange={handleTabChange} />
-      {activeTab === "overview" && (
+  const goBack = () => {
+    setView("auto");
+  };
+
+  // Schema view
+  if (view === "schema") {
+    return (
+      <div className="plugin-container">
+        <SchemaTab
+          schemas={schemas}
+          categories={categories}
+          onBack={goBack}
+        />
+      </div>
+    );
+  }
+
+  // Auto view: no selection → overview, selection → selected
+  if (!selectedNodeId) {
+    return (
+      <div className="plugin-container">
         <OverviewTab
           annotations={pageAnnotations}
           schemas={schemas}
           categories={categories}
-          onNavigate={(tab) => setActiveTab(tab)}
+          onEdit={(nodeId) => {
+            postToPlugin({ type: "SELECT_NODE", nodeId });
+          }}
         />
-      )}
-      {activeTab === "selected" && (
-        <SelectedTab
-          nodeId={selectedNodeId}
-          nodeName={selectedNodeName}
-          nodeType={selectedNodeType}
-          annotations={selectedAnnotations}
-          schemas={schemas}
-          categories={categories}
-          onNavigate={(tab) => setActiveTab(tab)}
-        />
-      )}
-      {activeTab === "schema" && (
-        <SchemaTab
-          schemas={schemas}
-          categories={categories}
-        />
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="plugin-container">
+      <SelectedTab
+        nodeId={selectedNodeId}
+        nodeName={selectedNodeName}
+        nodeType={selectedNodeType}
+        annotations={selectedAnnotations}
+        schemas={schemas}
+        categories={categories}
+        onGoToSchema={goToSchema}
+      />
     </div>
   );
 }

@@ -6,9 +6,10 @@ import { postToPlugin } from "../hooks/usePluginMessage";
 interface SchemaTabProps {
   schemas: SchemaStore;
   categories: { id: string; label: string; color: string }[];
+  onBack: () => void;
 }
 
-export function SchemaTab({ schemas, categories }: SchemaTabProps) {
+export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
   const [draft, setDraft] = useState<SchemaStore>(schemas);
   const [dirty, setDirty] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
@@ -94,9 +95,14 @@ export function SchemaTab({ schemas, categories }: SchemaTabProps) {
         </div>
       </div>
       <div className="action-bar">
-        <button className="btn btn-secondary" onClick={handleReset} disabled={!dirty}>
-          Reset
-        </button>
+        <div style={{ display: "flex", gap: 6 }}>
+          <button className="btn btn-secondary" onClick={onBack}>
+            Back
+          </button>
+          <button className="btn btn-secondary" onClick={handleReset} disabled={!dirty}>
+            Reset
+          </button>
+        </div>
         <button className="btn btn-primary" onClick={handleSave} disabled={!dirty}>
           Save
         </button>
