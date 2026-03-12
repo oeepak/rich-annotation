@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { SchemaStore, AnnotationInfo, CategorySchema } from "@shared/types";
-import { FieldInput } from "./FieldInput";
+import { FieldInput, GroupFieldInput } from "./FieldInput";
 import { AnnotationPreview } from "./AnnotationPreview";
 import { RawTextEditor } from "./RawTextEditor";
 import { useSelectionFields } from "../hooks/useSelection";
@@ -37,9 +37,10 @@ export function SelectedTab({
   const currentLabel = currentAnnotation?.label ?? "";
   const schema: CategorySchema | undefined = schemas[selectedCategoryId];
 
-  const { fieldValues, updateField, previewText, parsedFields, allMatched } =
+  const { fieldValues, updateField, updateGroupField, previewText, currentFieldData, parsedFields, allMatched } =
     useSelectionFields({
       label: currentLabel,
+      fieldData: currentAnnotation?.fieldData,
       schemaFields: schema?.fields ?? [],
     });
 
@@ -85,6 +86,7 @@ export function SelectedTab({
       nodeId,
       categoryId: selectedCategoryId,
       text,
+      fieldData: currentFieldData,
     });
     setRawMode(false);
   };
@@ -186,11 +188,31 @@ export function SelectedTab({
               <div className="section-label">{schema.categoryLabel} Fields</div>
               {schema.fields.map((field) => {
                 const parsed = parsedFields.find((p) => p.name === field.name);
+
+                if (field.type === "group") {
+                  const groupValues = (typeof fieldValues[field.name] === "object"
+                    ? fieldValues[field.name]
+                    : {}) as Record<string, string>;
+                  const childMatches: Record<string, boolean> = {};
+                  for (const child of parsed?.children ?? []) {
+                    childMatches[child.name] = child.matched;
+                  }
+                  return (
+                    <GroupFieldInput
+                      key={field.name}
+                      schema={field}
+                      values={groupValues}
+                      childMatches={childMatches}
+                      onChildChange={(childName, v) => updateGroupField(field.name, childName, v)}
+                    />
+                  );
+                }
+
                 return (
                   <FieldInput
                     key={field.name}
                     schema={field}
-                    value={fieldValues[field.name] ?? ""}
+                    value={(fieldValues[field.name] ?? "") as string}
                     matched={parsed?.matched ?? true}
                     onChange={(v) => updateField(field.name, v)}
                   />
