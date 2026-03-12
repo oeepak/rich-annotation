@@ -7,7 +7,7 @@ interface SchemaFieldRowProps {
   onDelete: () => void;
 }
 
-const fieldTypes: FieldType[] = ["text", "number", "boolean", "select"];
+const fieldTypes: FieldType[] = ["text", "number", "boolean", "select", "group"];
 
 export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProps) {
   return (
@@ -22,20 +22,19 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
       <select
         className="select"
         value={field.type}
-        onChange={(e) =>
+        onChange={(e) => {
+          const newType = e.target.value as FieldType;
           onChange({
             ...field,
-            type: e.target.value as FieldType,
-            options: e.target.value === "select" ? field.options ?? [""] : undefined,
-            multiline: e.target.value === "text" ? field.multiline : undefined,
-          })
-        }
+            type: newType,
+            options: newType === "select" ? field.options ?? [""] : undefined,
+            children: newType === "group" ? field.children ?? [{ name: "", type: "text", required: false }] : undefined,
+          });
+        }}
         style={{ flex: 1 }}
       >
         {fieldTypes.map((t) => (
-          <option key={t} value={t}>
-            {t}
-          </option>
+          <option key={t} value={t}>{t}</option>
         ))}
       </select>
       <label style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11 }}>
@@ -79,17 +78,95 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
     );
   }
 
-  if (field.type === "text") {
+  if (field.type === "group") {
+    const children = field.children ?? [];
+    const childTypes: FieldType[] = ["text", "number", "boolean", "select"];
+
+    const addChild = () => {
+      onChange({
+        ...field,
+        children: [...children, { name: "", type: "text", required: false }],
+      });
+    };
+
+    const updateChild = (index: number, updated: FieldSchema) => {
+      const newChildren = [...children];
+      newChildren[index] = updated;
+      onChange({ ...field, children: newChildren });
+    };
+
+    const deleteChild = (index: number) => {
+      onChange({ ...field, children: children.filter((_, i) => i !== index) });
+    };
+
     return (
-      <div style={{ marginLeft: 8, marginBottom: 4 }}>
-        <label style={{ fontSize: 10, color: "#999", display: "flex", alignItems: "center", gap: 4 }}>
-          <input
-            type="checkbox"
-            checked={field.multiline ?? false}
-            onChange={(e) => onChange({ ...field, multiline: e.target.checked })}
-          />
-          multiline input
-        </label>
+      <div style={{ marginLeft: 16, marginBottom: 4, borderLeft: "2px solid #e0e0e0", paddingLeft: 8 }}>
+        <div style={{ fontSize: 10, color: "#999", marginBottom: 4 }}>children:</div>
+        {children.map((child, i) => (
+          <div key={i} style={{ marginBottom: 4 }}>
+            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              <input
+                className="input"
+                placeholder="child name"
+                value={child.name}
+                onChange={(e) => updateChild(i, { ...child, name: e.target.value })}
+                style={{ flex: 2 }}
+              />
+              <select
+                className="select"
+                value={child.type}
+                onChange={(e) => {
+                  const t = e.target.value as FieldType;
+                  updateChild(i, {
+                    ...child,
+                    type: t,
+                    options: t === "select" ? child.options ?? [""] : undefined,
+                  });
+                }}
+                style={{ flex: 1 }}
+              >
+                {childTypes.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+              <label style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11 }}>
+                <input
+                  type="checkbox"
+                  checked={child.required}
+                  onChange={(e) => updateChild(i, { ...child, required: e.target.checked })}
+                />
+                req
+              </label>
+              <button className="btn btn-danger" onClick={() => deleteChild(i)} style={{ padding: "2px 6px" }}>
+                ×
+              </button>
+            </div>
+            {child.type === "select" && (
+              <div style={{ marginLeft: 8, marginTop: 2 }}>
+                <span style={{ fontSize: 10, color: "#999" }}>options: </span>
+                <input
+                  className="input"
+                  value={(child.options ?? []).join(", ")}
+                  onChange={(e) =>
+                    updateChild(i, {
+                      ...child,
+                      options: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                    })
+                  }
+                  placeholder="A, B, C"
+                  style={{ width: "calc(100% - 60px)", display: "inline-block" }}
+                />
+              </div>
+            )}
+          </div>
+        ))}
+        <button
+          className="btn btn-secondary"
+          onClick={addChild}
+          style={{ fontSize: 10, padding: "2px 8px" }}
+        >
+          + Child
+        </button>
       </div>
     );
   }
