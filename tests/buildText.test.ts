@@ -19,7 +19,7 @@ describe("buildText", () => {
     };
     const result = buildText(experimentFields, values);
     expect(result).toBe(
-      "**experiment_id**\n- paywall_copy_test\n\n**variant**\n- B\n\n**surface**\n- pricing_modal\n\n**enabled**\n- true"
+      "experiment_id\n- paywall_copy_test\n\nvariant\n- B\n\nsurface\n- pricing_modal\n\nenabled\n- true"
     );
   });
 
@@ -31,7 +31,7 @@ describe("buildText", () => {
       enabled: "",
     };
     const result = buildText(experimentFields, values);
-    expect(result).toBe("**experiment_id**\n- test\n\n**variant**\n- A");
+    expect(result).toBe("experiment_id\n- test\n\nvariant\n- A");
   });
 
   it("keeps empty required fields", () => {
@@ -40,7 +40,7 @@ describe("buildText", () => {
       variant: "B",
     };
     const result = buildText(experimentFields, values);
-    expect(result).toBe("**experiment_id**\n- \n\n**variant**\n- B");
+    expect(result).toBe("experiment_id\n- \n\nvariant\n- B");
   });
 
   it("preserves field order from schema", () => {
@@ -52,9 +52,9 @@ describe("buildText", () => {
     };
     const result = buildText(experimentFields, values);
     const blocks = result.split("\n\n");
-    expect(blocks[0]).toMatch(/^\*\*experiment_id\*\*/);
-    expect(blocks[1]).toMatch(/^\*\*variant\*\*/);
-    expect(blocks[2]).toMatch(/^\*\*surface\*\*/);
-    expect(blocks[3]).toMatch(/^\*\*enabled\*\*/);
+    expect(blocks[0]).toMatch(/^experiment_id/);
+    expect(blocks[1]).toMatch(/^variant/);
+    expect(blocks[2]).toMatch(/^surface/);
+    expect(blocks[3]).toMatch(/^enabled/);
   });
 });

@@ -12,7 +12,7 @@ const experimentFields: FieldSchema[] = [
 describe("parseText", () => {
   it("parses valid markdown text as matched", () => {
     const text =
-      "**experiment_id**\n- paywall_copy_test\n\n**variant**\n- B\n\n**surface**\n- pricing_modal\n\n**enabled**\n- true";
+      "experiment_id\n- paywall_copy_test\n\nvariant\n- B\n\nsurface\n- pricing_modal\n\nenabled\n- true";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("matched");
     expect(result.fields).toHaveLength(4);
@@ -31,7 +31,7 @@ describe("parseText", () => {
   });
 
   it("returns not_matched when select value is invalid", () => {
-    const text = "**experiment_id**\n- test\n\n**variant**\n- hoho";
+    const text = "experiment_id\n- test\n\nvariant\n- hoho";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("not_matched");
     const variantField = result.fields.find((f) => f.name === "variant");
@@ -40,7 +40,7 @@ describe("parseText", () => {
   });
 
   it("returns empty string for missing optional fields", () => {
-    const text = "**experiment_id**\n- test\n\n**variant**\n- A";
+    const text = "experiment_id\n- test\n\nvariant\n- A";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("matched");
     const surfaceField = result.fields.find((f) => f.name === "surface");
@@ -49,7 +49,7 @@ describe("parseText", () => {
   });
 
   it("marks missing required field as not matched", () => {
-    const text = "**variant**\n- A";
+    const text = "variant\n- A";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("not_matched");
     const idField = result.fields.find((f) => f.name === "experiment_id");

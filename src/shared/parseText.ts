@@ -15,7 +15,7 @@ export function parseText(
   const blocks = text.split(/\n\n/);
   for (const block of blocks) {
     const lines = block.split("\n");
-    const headerMatch = lines[0]?.match(/^\*\*(.+?)\*\*$/);
+    const headerMatch = lines[0]?.match(/^(?:\*\*)?(.+?)(?:\*\*)?$/);
     if (!headerMatch) continue;
 
     const key = headerMatch[1];

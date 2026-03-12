@@ -13,7 +13,7 @@ export function buildText(
       continue;
     }
 
-    parts.push(`**${field.name}**\n- ${value}`);
+    parts.push(`${field.name}\n- ${value}`);
   }
 
   return parts.join("\n\n");
