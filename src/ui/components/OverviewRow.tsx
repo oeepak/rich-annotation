@@ -3,14 +3,14 @@ import type { AnnotationInfo } from "@shared/types";
 import { postToPlugin } from "../hooks/usePluginMessage";
 
 const COLOR_MAP: Record<string, { bg: string; fg: string }> = {
-  yellow: { bg: "#fef7e0", fg: "#8a6d00" },
-  orange: { bg: "#fff3e0", fg: "#c65d00" },
-  red: { bg: "#fce8e6", fg: "#d93025" },
-  pink: { bg: "#fce4ec", fg: "#c2185b" },
-  violet: { bg: "#ede7f6", fg: "#7b1fa2" },
-  blue: { bg: "#e3f2fd", fg: "#1565c0" },
-  teal: { bg: "#e0f2f1", fg: "#00796b" },
-  green: { bg: "#e6f4ea", fg: "#1e8e3e" },
+  yellow: { bg: "#f5a623", fg: "#fff" },
+  orange: { bg: "#e8601c", fg: "#fff" },
+  red: { bg: "#e03e3e", fg: "#fff" },
+  pink: { bg: "#d84a8a", fg: "#fff" },
+  violet: { bg: "#7b61ff", fg: "#fff" },
+  blue: { bg: "#0d99ff", fg: "#fff" },
+  teal: { bg: "#15b8a6", fg: "#fff" },
+  green: { bg: "#14ae5c", fg: "#fff" },
 };
 
 interface OverviewRowProps {
