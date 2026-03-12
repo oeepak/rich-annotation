@@ -143,20 +143,13 @@ export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabPro
       </div>
 
       <div className="search-bar">
-        <input
-          className="input"
-          placeholder="Search annotations, nodes, fields..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ flex: 1 }}
-        />
         <select
           className="select"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
           style={{ width: 120 }}
         >
-          <option value="">All Categories</option>
+          <option value="">All</option>
           {categoryIds.map((catId) => {
             const label = schemas[catId]?.categoryLabel ?? catId;
             return (
@@ -166,6 +159,13 @@ export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabPro
             );
           })}
         </select>
+        <input
+          className="input"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ flex: 1 }}
+        />
       </div>
 
       {filtered.map((ann, i) => (

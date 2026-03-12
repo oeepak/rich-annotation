@@ -184,6 +184,11 @@ textarea.input {
   color: #f9ab00;
 }
 
+.badge-category {
+  background: var(--figma-color-bg-secondary, #e8e8e8);
+  color: var(--figma-color-text, #333);
+}
+
 .preview-box {
   background: var(--figma-color-bg-secondary, #f5f5f5);
   border-radius: 4px;
@@ -220,6 +225,15 @@ textarea.input {
 .row-fields {
   font-size: 11px;
   color: var(--figma-color-text-secondary, #999);
+}
+
+.row-body {
+  font-size: 11px;
+  color: var(--figma-color-text-secondary, #666);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-top: 4px;
+  line-height: 1.4;
 }
 
 .search-bar {
