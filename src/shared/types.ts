@@ -25,6 +25,7 @@ export interface ParsedField {
   rawValue: string;
   parsedValue: string | number | boolean | null;
   matched: boolean;
+  children?: ParsedField[]; // for group type
 }
 
 export type ParseMatch = "matched" | "not_matched" | "no_schema";

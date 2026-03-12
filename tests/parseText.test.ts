@@ -2,43 +2,70 @@ import { describe, it, expect } from "vitest";
 import { parseText } from "../src/shared/parseText";
 import type { FieldSchema } from "../src/shared/types";
 
-const experimentFields: FieldSchema[] = [
-  { name: "experiment_id", type: "text", required: true },
-  { name: "variant", type: "select", required: true, options: ["A", "B", "C"] },
-  { name: "surface", type: "text", required: false },
-  { name: "enabled", type: "boolean", required: false },
+const flatFields: FieldSchema[] = [
+  { name: "Event Type", type: "text", required: true },
+  { name: "Event Key", type: "text", required: true },
+];
+
+const withGroup: FieldSchema[] = [
+  { name: "Event Type", type: "text", required: true },
+  {
+    name: "Params",
+    type: "group",
+    required: false,
+    children: [
+      { name: "order", type: "number", required: false },
+      { name: "id", type: "text", required: false },
+    ],
+  },
 ];
 
 describe("parseText", () => {
-  it("parses valid canonical text as matched", () => {
-    const text = "experiment_id: paywall_copy_test\nvariant: B\nsurface: pricing_modal\nenabled: true";
-    const result = parseText(text, experimentFields);
+  it("parses flat fields from new format", () => {
+    const text = "Event Type\n- Click\n\nEvent Key\n- click_banner";
+    const result = parseText(text, flatFields);
     expect(result.parseMatch).toBe("matched");
-    expect(result.fields[0]).toEqual({ name: "experiment_id", rawValue: "paywall_copy_test", parsedValue: "paywall_copy_test", matched: true });
-    expect(result.fields[3]).toEqual({ name: "enabled", rawValue: "true", parsedValue: true, matched: true });
+    expect(result.fields[0]).toMatchObject({ name: "Event Type", rawValue: "Click", matched: true });
+    expect(result.fields[1]).toMatchObject({ name: "Event Key", rawValue: "click_banner", matched: true });
   });
 
-  it("returns not_matched when select value is invalid", () => {
-    const text = "experiment_id: test\nvariant: hoho";
-    const result = parseText(text, experimentFields);
+  it("parses group fields with sub key: sub value", () => {
+    const text = "Event Type\n- Click\n\nParams\n- order: 42\n- id: abc";
+    const result = parseText(text, withGroup);
+    expect(result.parseMatch).toBe("matched");
+    expect(result.fields[1]).toMatchObject({
+      name: "Params",
+      matched: true,
+      children: [
+        { name: "order", rawValue: "42", matched: true },
+        { name: "id", rawValue: "abc", matched: true },
+      ],
+    });
+  });
+
+  it("returns not_matched for missing required field", () => {
+    const text = "Event Key\n- test";
+    const result = parseText(text, flatFields);
     expect(result.parseMatch).toBe("not_matched");
-    expect(result.fields.find((f) => f.name === "variant")?.matched).toBe(false);
   });
 
-  it("returns empty string for missing optional fields", () => {
-    const text = "experiment_id: test\nvariant: A";
-    const result = parseText(text, experimentFields);
+  it("returns empty for missing optional group", () => {
+    const text = "Event Type\n- Click";
+    const result = parseText(text, withGroup);
     expect(result.parseMatch).toBe("matched");
-    expect(result.fields.find((f) => f.name === "surface")?.rawValue).toBe("");
+    expect(result.fields[1]).toMatchObject({ name: "Params", rawValue: "", matched: true });
   });
 
-  it("marks missing required field as not matched", () => {
-    const text = "variant: A";
-    expect(parseText(text, experimentFields).parseMatch).toBe("not_matched");
+  it("handles value with colons in flat field", () => {
+    const text = "Event Type\n- url:test:123\n\nEvent Key\n- key";
+    const result = parseText(text, flatFields);
+    expect(result.fields[0].rawValue).toBe("url:test:123");
   });
 
-  it("handles values with colons", () => {
-    const text = "experiment_id: url:test:123\nvariant: A";
-    expect(parseText(text, experimentFields).fields.find((f) => f.name === "experiment_id")?.rawValue).toBe("url:test:123");
+  it("validates group children types", () => {
+    const text = "Event Type\n- Click\n\nParams\n- order: notanumber\n- id: abc";
+    const result = parseText(text, withGroup);
+    expect(result.parseMatch).toBe("not_matched");
+    expect(result.fields[1].children![0].matched).toBe(false);
   });
 });
