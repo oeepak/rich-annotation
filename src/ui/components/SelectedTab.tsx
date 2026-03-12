@@ -185,7 +185,7 @@ export function SelectedTab({
 
             {/* Field Inputs */}
             <div className="section">
-              <div className="section-label">{schema.categoryLabel} Fields</div>
+              <div className="section-label">Fields</div>
               {schema.fields.map((field) => {
                 const parsed = parsedFields.find((p) => p.name === field.name);
 
