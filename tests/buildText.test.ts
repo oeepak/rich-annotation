@@ -2,43 +2,79 @@ import { describe, it, expect } from "vitest";
 import { buildText } from "../src/shared/buildText";
 import type { FieldSchema } from "../src/shared/types";
 
-const experimentFields: FieldSchema[] = [
-  { name: "experiment_id", type: "text", required: true },
-  { name: "variant", type: "select", required: true, options: ["A", "B", "C"] },
-  { name: "surface", type: "text", required: false },
-  { name: "enabled", type: "boolean", required: false },
+const flatFields: FieldSchema[] = [
+  { name: "Event Type", type: "text", required: true },
+  { name: "Event Key", type: "text", required: true },
+];
+
+const withGroup: FieldSchema[] = [
+  { name: "Event Type", type: "text", required: true },
+  { name: "Event Key", type: "text", required: true },
+  {
+    name: "Params",
+    type: "group",
+    required: false,
+    children: [
+      { name: "order", type: "text", required: false },
+      { name: "id", type: "text", required: false },
+    ],
+  },
 ];
 
 describe("buildText", () => {
-  it("builds canonical field: value lines", () => {
-    const values = {
-      experiment_id: "paywall_copy_test",
-      variant: "B",
-      surface: "pricing_modal",
-      enabled: "true",
-    };
-    const result = buildText(experimentFields, values);
-    expect(result).toBe(
-      "experiment_id: paywall_copy_test\nvariant: B\nsurface: pricing_modal\nenabled: true"
+  it("builds flat fields with Key / - Value format", () => {
+    const values = { "Event Type": "Click", "Event Key": "click_banner" };
+    expect(buildText(flatFields, values)).toBe(
+      "Event Type\n- Click\n\nEvent Key\n- click_banner"
     );
   });
 
   it("omits empty optional fields", () => {
-    const values = { experiment_id: "test", variant: "A", surface: "", enabled: "" };
-    expect(buildText(experimentFields, values)).toBe("experiment_id: test\nvariant: A");
+    const fields: FieldSchema[] = [
+      { name: "Event Type", type: "text", required: true },
+      { name: "Note", type: "text", required: false },
+    ];
+    const values = { "Event Type": "Click", Note: "" };
+    expect(buildText(fields, values)).toBe("Event Type\n- Click");
   });
 
   it("keeps empty required fields", () => {
-    const values = { experiment_id: "", variant: "B" };
-    expect(buildText(experimentFields, values)).toBe("experiment_id: \nvariant: B");
+    const values = { "Event Type": "", "Event Key": "test" };
+    expect(buildText(flatFields, values)).toBe(
+      "Event Type\n- \n\nEvent Key\n- test"
+    );
   });
 
-  it("preserves field order from schema", () => {
-    const values = { enabled: "true", experiment_id: "test", variant: "A", surface: "modal" };
-    const lines = buildText(experimentFields, values).split("\n");
-    expect(lines[0]).toMatch(/^experiment_id:/);
-    expect(lines[1]).toMatch(/^variant:/);
-    expect(lines[2]).toMatch(/^surface:/);
-    expect(lines[3]).toMatch(/^enabled:/);
+  it("builds group fields with sub key: sub value", () => {
+    const values = {
+      "Event Type": "Click",
+      "Event Key": "click_banner",
+      Params: { order: "number", id: "uuid" },
+    };
+    expect(buildText(withGroup, values)).toBe(
+      "Event Type\n- Click\n\nEvent Key\n- click_banner\n\nParams\n- order: number\n- id: uuid"
+    );
+  });
+
+  it("omits group when all children are empty and group is optional", () => {
+    const values = {
+      "Event Type": "Click",
+      "Event Key": "click_banner",
+      Params: { order: "", id: "" },
+    };
+    expect(buildText(withGroup, values)).toBe(
+      "Event Type\n- Click\n\nEvent Key\n- click_banner"
+    );
+  });
+
+  it("includes group with partial children filled", () => {
+    const values = {
+      "Event Type": "Click",
+      "Event Key": "click_banner",
+      Params: { order: "1", id: "" },
+    };
+    expect(buildText(withGroup, values)).toBe(
+      "Event Type\n- Click\n\nEvent Key\n- click_banner\n\nParams\n- order: 1"
+    );
   });
 });

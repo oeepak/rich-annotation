@@ -1,20 +1,33 @@
-import type { FieldSchema, FieldValues } from "./types";
+import type { FieldSchema } from "./types";
+
+type BuildValues = Record<string, string | Record<string, string>>;
 
 export function buildText(
   fields: FieldSchema[],
-  values: FieldValues
+  values: BuildValues
 ): string {
-  const lines: string[] = [];
+  const blocks: string[] = [];
 
   for (const field of fields) {
-    const value = values[field.name] ?? "";
+    if (field.type === "group") {
+      const children = field.children ?? [];
+      const groupValues = (values[field.name] ?? {}) as Record<string, string>;
 
-    if (value === "" && !field.required) {
-      continue;
+      const childLines: string[] = [];
+      for (const child of children) {
+        const v = groupValues[child.name] ?? "";
+        if (v === "" && !child.required) continue;
+        childLines.push(`- ${child.name}: ${v}`);
+      }
+
+      if (childLines.length === 0 && !field.required) continue;
+      blocks.push(`${field.name}\n${childLines.join("\n")}`);
+    } else {
+      const value = (values[field.name] ?? "") as string;
+      if (value === "" && !field.required) continue;
+      blocks.push(`${field.name}\n- ${value}`);
     }
-
-    lines.push(`${field.name}: ${value}`);
   }
 
-  return lines.join("\n");
+  return blocks.join("\n\n");
 }
