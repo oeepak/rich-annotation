@@ -10,7 +10,7 @@ import type { SchemaStore, AnnotationInfo } from "@shared/types";
 export function App() {
   const [activeTab, setActiveTab] = useState<TabId>("selected");
   const [schemas, setSchemas] = useState<SchemaStore>({});
-  const [categories, setCategories] = useState<{ id: string; label: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; label: string; color: string }[]>([]);
 
   // Selection state
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -66,6 +66,7 @@ export function App() {
         <OverviewTab
           annotations={pageAnnotations}
           schemas={schemas}
+          categories={categories}
           onNavigate={(tab) => setActiveTab(tab)}
         />
       )}

@@ -37,7 +37,7 @@ export type PluginMessage =
   | { type: "ANNOTATIONS_LIST"; annotations: AnnotationInfo[] }
   | {
       type: "CATEGORIES_LIST";
-      categories: { id: string; label: string }[];
+      categories: { id: string; label: string; color: string }[];
     }
   | { type: "ANNOTATION_APPLIED" }
   | { type: "ANNOTATION_DELETED" };

@@ -7,10 +7,11 @@ import type { TabId } from "./Tabs";
 interface OverviewTabProps {
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
+  categories: { id: string; label: string; color: string }[];
   onNavigate: (tab: TabId) => void;
 }
 
-export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabProps) {
+export function OverviewTab({ annotations, schemas, categories, onNavigate }: OverviewTabProps) {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
 
@@ -168,9 +169,12 @@ export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabPro
         />
       </div>
 
-      {filtered.map((ann, i) => (
-        <OverviewRow key={`${ann.nodeId}-${ann.categoryId}-${i}`} annotation={ann} />
-      ))}
+      {filtered.map((ann, i) => {
+        const cat = categories.find((c) => c.id === ann.categoryId);
+        return (
+          <OverviewRow key={`${ann.nodeId}-${ann.categoryId}-${i}`} annotation={ann} categoryColor={cat?.color} />
+        );
+      })}
     </div>
   );
 }

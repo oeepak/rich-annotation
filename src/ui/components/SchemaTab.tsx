@@ -5,7 +5,7 @@ import { postToPlugin } from "../hooks/usePluginMessage";
 
 interface SchemaTabProps {
   schemas: SchemaStore;
-  categories: { id: string; label: string }[];
+  categories: { id: string; label: string; color: string }[];
 }
 
 export function SchemaTab({ schemas, categories }: SchemaTabProps) {

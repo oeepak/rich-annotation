@@ -13,7 +13,7 @@ interface SelectedTabProps {
   nodeType: string;
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
-  categories: { id: string; label: string }[];
+  categories: { id: string; label: string; color: string }[];
   onNavigate: (tab: TabId) => void;
 }
 

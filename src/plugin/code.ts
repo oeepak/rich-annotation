@@ -23,12 +23,12 @@ function saveSchemas(schemas: SchemaStore): void {
   figma.root.setPluginData(SCHEMA_KEY, JSON.stringify(schemas));
 }
 
-let cachedCategories: { id: string; label: string }[] = [];
+let cachedCategories: { id: string; label: string; color: string }[] = [];
 
 async function ensureCategoriesLoaded(): Promise<void> {
   if (cachedCategories.length === 0) {
     const cats = await figma.annotations.getAnnotationCategoriesAsync();
-    cachedCategories = cats.map((c) => ({ id: c.id, label: c.label }));
+    cachedCategories = cats.map((c) => ({ id: c.id, label: c.label, color: c.color }));
   }
 }
 
@@ -179,6 +179,10 @@ figma.ui.onmessage = async (msg: UIMessage) => {
   switch (msg.type) {
     case "INIT": {
       await ensureCategoriesLoaded();
+      figma.ui.postMessage({
+        type: "CATEGORIES_LIST",
+        categories: cachedCategories,
+      } satisfies PluginMessage);
       const info = getSelectionInfo();
       figma.ui.postMessage(info);
       break;
