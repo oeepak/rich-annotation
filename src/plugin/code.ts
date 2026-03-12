@@ -48,7 +48,8 @@ function getAnnotationsForPage(): AnnotationInfo[] {
     if ("annotations" in node && node.annotations && node.annotations.length > 0) {
       for (const ann of node.annotations) {
         const catId = ann.categoryId ?? "";
-        const label = ann.label ?? "";
+        const rawStored = node.getPluginData("ra:" + catId);
+        const label = rawStored || ann.label || "";
         const schema = schemas[catId];
 
         let parsedFields: AnnotationInfo["parsedFields"] = [];
@@ -191,13 +192,9 @@ figma.ui.onmessage = async (msg: UIMessage) => {
       const existing = [...(node.annotations ?? [])];
       const idx = existing.findIndex((a) => a.categoryId === msg.categoryId);
 
-      const newAnn: Record<string, string | undefined> = {
-        label: msg.text,
-        categoryId: msg.categoryId,
-      };
-      if (msg.markdown) {
-        newAnn.labelMarkdown = msg.markdown;
-      }
+      const newAnn: Record<string, string> = msg.markdown
+        ? { labelMarkdown: msg.markdown, categoryId: msg.categoryId }
+        : { label: msg.text, categoryId: msg.categoryId };
 
       if (idx >= 0) {
         existing[idx] = newAnn;
@@ -207,6 +204,11 @@ figma.ui.onmessage = async (msg: UIMessage) => {
 
       const annotatable = node as FrameNode;
       annotatable.annotations = existing;
+
+      // Store raw text separately for parse round-trip
+      if (msg.markdown) {
+        node.setPluginData("ra:" + msg.categoryId, msg.text);
+      }
 
       figma.ui.postMessage({ type: "ANNOTATION_APPLIED" } satisfies PluginMessage);
       // Refresh selection info
