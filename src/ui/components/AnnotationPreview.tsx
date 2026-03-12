@@ -17,11 +17,11 @@ export function AnnotationPreview({ text, parsedFields }: AnnotationPreviewProps
       <div className="section-label">Annotation Text</div>
       <div className="preview-box">
         {lines.map((line, i) => {
-          const fieldName = line.split(":")[0]?.trim();
-          const isError = unmatchedNames.has(fieldName);
+          const trimmed = line.trim();
+          const isError = unmatchedNames.has(trimmed);
           return (
             <div key={i} className={`preview-line${isError ? " error" : ""}`}>
-              {line}
+              {trimmed === "" ? "\u00A0" : line}
             </div>
           );
         })}
