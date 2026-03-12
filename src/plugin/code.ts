@@ -48,7 +48,7 @@ function getAnnotationsForPage(): AnnotationInfo[] {
     if ("annotations" in node && node.annotations && node.annotations.length > 0) {
       for (const ann of node.annotations) {
         const catId = ann.categoryId ?? "";
-        const label = ann.labelMarkdown || ann.label || "";
+        const label = ann.label ?? "";
         const schema = schemas[catId];
 
         let parsedFields: AnnotationInfo["parsedFields"] = [];
@@ -192,7 +192,7 @@ figma.ui.onmessage = async (msg: UIMessage) => {
       const idx = existing.findIndex((a) => a.categoryId === msg.categoryId);
 
       const newAnn = {
-        labelMarkdown: msg.text,
+        label: msg.text,
         categoryId: msg.categoryId,
       };
 

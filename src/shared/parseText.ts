@@ -10,23 +10,20 @@ export function parseText(
   text: string,
   schemaFields: FieldSchema[]
 ): ParseResult {
-  const fieldMap = new Map<string, string>();
+  const lineMap = new Map<string, string>();
 
-  const blocks = text.split(/\n\n/);
-  for (const block of blocks) {
-    const lines = block.split("\n");
-    const headerMatch = lines[0]?.match(/^(?:\*\*)?(.+?)(?:\*\*)?$/);
-    if (!headerMatch) continue;
+  for (const line of text.split("\n")) {
+    const colonIndex = line.indexOf(":");
+    if (colonIndex === -1) continue;
 
-    const key = headerMatch[1];
-    const valueLine = lines[1] ?? "";
-    const value = valueLine.replace(/^-\s?/, "").trim();
-    fieldMap.set(key, value);
+    const key = line.slice(0, colonIndex).trim();
+    const value = line.slice(colonIndex + 1).trim();
+    lineMap.set(key, value);
   }
 
   let allMatched = true;
   const fields: ParsedField[] = schemaFields.map((schema) => {
-    const rawValue = fieldMap.get(schema.name) ?? "";
+    const rawValue = lineMap.get(schema.name) ?? "";
     const { parsedValue, matched } = validateField(rawValue, schema);
 
     if (!matched) {

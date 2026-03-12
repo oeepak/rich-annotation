@@ -4,7 +4,7 @@ export function buildText(
   fields: FieldSchema[],
   values: FieldValues
 ): string {
-  const parts: string[] = [];
+  const lines: string[] = [];
 
   for (const field of fields) {
     const value = values[field.name] ?? "";
@@ -13,8 +13,8 @@ export function buildText(
       continue;
     }
 
-    parts.push(`${field.name}\n- ${value}`);
+    lines.push(`${field.name}: ${value}`);
   }
 
-  return parts.join("\n\n");
+  return lines.join("\n");
 }

@@ -10,7 +10,7 @@ const experimentFields: FieldSchema[] = [
 ];
 
 describe("buildText", () => {
-  it("builds markdown with bold field names and list values", () => {
+  it("builds canonical field: value lines", () => {
     const values = {
       experiment_id: "paywall_copy_test",
       variant: "B",
@@ -19,42 +19,26 @@ describe("buildText", () => {
     };
     const result = buildText(experimentFields, values);
     expect(result).toBe(
-      "experiment_id\n- paywall_copy_test\n\nvariant\n- B\n\nsurface\n- pricing_modal\n\nenabled\n- true"
+      "experiment_id: paywall_copy_test\nvariant: B\nsurface: pricing_modal\nenabled: true"
     );
   });
 
   it("omits empty optional fields", () => {
-    const values = {
-      experiment_id: "test",
-      variant: "A",
-      surface: "",
-      enabled: "",
-    };
-    const result = buildText(experimentFields, values);
-    expect(result).toBe("experiment_id\n- test\n\nvariant\n- A");
+    const values = { experiment_id: "test", variant: "A", surface: "", enabled: "" };
+    expect(buildText(experimentFields, values)).toBe("experiment_id: test\nvariant: A");
   });
 
   it("keeps empty required fields", () => {
-    const values = {
-      experiment_id: "",
-      variant: "B",
-    };
-    const result = buildText(experimentFields, values);
-    expect(result).toBe("experiment_id\n- \n\nvariant\n- B");
+    const values = { experiment_id: "", variant: "B" };
+    expect(buildText(experimentFields, values)).toBe("experiment_id: \nvariant: B");
   });
 
   it("preserves field order from schema", () => {
-    const values = {
-      enabled: "true",
-      experiment_id: "test",
-      variant: "A",
-      surface: "modal",
-    };
-    const result = buildText(experimentFields, values);
-    const blocks = result.split("\n\n");
-    expect(blocks[0]).toMatch(/^experiment_id/);
-    expect(blocks[1]).toMatch(/^variant/);
-    expect(blocks[2]).toMatch(/^surface/);
-    expect(blocks[3]).toMatch(/^enabled/);
+    const values = { enabled: "true", experiment_id: "test", variant: "A", surface: "modal" };
+    const lines = buildText(experimentFields, values).split("\n");
+    expect(lines[0]).toMatch(/^experiment_id:/);
+    expect(lines[1]).toMatch(/^variant:/);
+    expect(lines[2]).toMatch(/^surface:/);
+    expect(lines[3]).toMatch(/^enabled:/);
   });
 });
