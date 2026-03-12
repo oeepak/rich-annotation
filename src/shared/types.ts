@@ -37,6 +37,7 @@ export interface AnnotationInfo {
   categoryId: string | undefined;
   categoryLabel: string;
   label: string;
+  fieldData?: FieldData;
   parsedFields: ParsedField[];
   parseMatch: ParseMatch;
 }

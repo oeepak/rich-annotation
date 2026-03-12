@@ -2,6 +2,7 @@ import type {
   SchemaStore,
   AnnotationInfo,
   FieldValues,
+  FieldData,
   CategorySchema,
 } from "./types";
 
@@ -17,6 +18,7 @@ export type UIMessage =
       nodeId: string;
       categoryId: string;
       text: string;
+      fieldData: FieldData;
     }
   | { type: "DELETE_ANNOTATION"; nodeId: string; categoryId: string }
   | { type: "SELECT_NODE"; nodeId: string }
