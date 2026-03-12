@@ -1,6 +1,7 @@
 import type { UIMessage, PluginMessage } from "@shared/messages";
-import type { SchemaStore, AnnotationInfo, ParseMatch } from "@shared/types";
+import type { SchemaStore, AnnotationInfo, FieldSchema, FieldData, ParsedField, ParseMatch } from "@shared/types";
 import { parseText } from "@shared/parseText";
+import { validateField } from "@shared/validateField";
 
 const SCHEMA_KEY = "rich-annotation-schemas";
 
@@ -39,6 +40,82 @@ function getCategoryLabel(catId: string, schemas: SchemaStore): string {
 
 // --- Annotation Helpers ---
 
+function buildAnnotationInfo(
+  node: SceneNode,
+  ann: { label?: string; categoryId?: string },
+  schemas: SchemaStore
+): AnnotationInfo {
+  const catId = ann.categoryId ?? "";
+  const label = ann.label ?? "";
+  const schema = schemas[catId];
+
+  let parsedFields: ParsedField[] = [];
+  let parseMatch: ParseMatch = "no_schema";
+  let fieldData: FieldData | undefined;
+
+  // Try pluginData first (source of truth)
+  const dataKey = `rich-annotation-data:${catId}`;
+  const rawData = "getPluginData" in node ? (node as FrameNode).getPluginData(dataKey) : "";
+  if (rawData) {
+    try {
+      fieldData = JSON.parse(rawData) as FieldData;
+    } catch {}
+  }
+
+  if (schema) {
+    if (fieldData) {
+      parsedFields = buildParsedFieldsFromData(fieldData, schema.fields);
+    } else {
+      // Fallback: parse from label text (legacy annotations)
+      const result = parseText(label, schema.fields);
+      parsedFields = result.fields;
+    }
+    parseMatch = parsedFields.every((f) => f.matched) ? "matched" : "not_matched";
+  }
+
+  return {
+    nodeId: node.id,
+    nodeName: node.name,
+    nodeType: node.type,
+    categoryId: catId || undefined,
+    categoryLabel: getCategoryLabel(catId, schemas),
+    label,
+    fieldData,
+    parsedFields,
+    parseMatch,
+  };
+}
+
+function buildParsedFieldsFromData(
+  data: FieldData,
+  schemaFields: FieldSchema[]
+): ParsedField[] {
+  return schemaFields.map((schema) => {
+    const raw = data[schema.name];
+
+    if (schema.type === "group") {
+      const groupData = (typeof raw === "object" ? raw : {}) as Record<string, string>;
+      const children = (schema.children ?? []).map((child) => {
+        const childRaw = groupData[child.name] ?? "";
+        const { parsedValue, matched } = validateField(childRaw, child);
+        return { name: child.name, rawValue: childRaw, parsedValue, matched };
+      });
+      const groupMatched = children.every((c) => c.matched);
+      return {
+        name: schema.name,
+        rawValue: "",
+        parsedValue: null,
+        matched: groupMatched,
+        children,
+      };
+    }
+
+    const rawValue = (typeof raw === "string" ? raw : "") as string;
+    const { parsedValue, matched } = validateField(rawValue, schema);
+    return { name: schema.name, rawValue, parsedValue, matched };
+  });
+}
+
 function getAnnotationsForPage(): AnnotationInfo[] {
   const schemas = loadSchemas();
   const results: AnnotationInfo[] = [];
@@ -47,29 +124,7 @@ function getAnnotationsForPage(): AnnotationInfo[] {
   function walk(node: SceneNode) {
     if ("annotations" in node && node.annotations && node.annotations.length > 0) {
       for (const ann of node.annotations) {
-        const catId = ann.categoryId ?? "";
-        const label = ann.label ?? "";
-        const schema = schemas[catId];
-
-        let parsedFields: AnnotationInfo["parsedFields"] = [];
-        let parseMatch: ParseMatch = "no_schema";
-
-        if (schema) {
-          const result = parseText(label, schema.fields);
-          parsedFields = result.fields;
-          parseMatch = result.parseMatch;
-        }
-
-        results.push({
-          nodeId: node.id,
-          nodeName: node.name,
-          nodeType: node.type,
-          categoryId: catId || undefined,
-          categoryLabel: getCategoryLabel(catId, schemas),
-          label,
-          parsedFields,
-          parseMatch,
-        });
+        results.push(buildAnnotationInfo(node, ann, schemas));
       }
     }
 
@@ -105,29 +160,7 @@ function getSelectionInfo(): PluginMessage {
 
   if ("annotations" in node && node.annotations) {
     for (const ann of node.annotations) {
-      const catId = ann.categoryId ?? "";
-      const label = ann.label ?? "";
-      const schema = schemas[catId];
-
-      let parsedFields: AnnotationInfo["parsedFields"] = [];
-      let parseMatch: ParseMatch = "no_schema";
-
-      if (schema) {
-        const result = parseText(label, schema.fields);
-        parsedFields = result.fields;
-        parseMatch = result.parseMatch;
-      }
-
-      annotations.push({
-        nodeId: node.id,
-        nodeName: node.name,
-        nodeType: node.type,
-        categoryId: catId || undefined,
-        categoryLabel: schema?.categoryLabel ?? catId,
-        label,
-        parsedFields,
-        parseMatch,
-      });
+      annotations.push(buildAnnotationInfo(node, ann, schemas));
     }
   }
 
@@ -205,8 +238,11 @@ figma.ui.onmessage = async (msg: UIMessage) => {
       const annotatable = node as FrameNode;
       annotatable.annotations = existing;
 
+      // Store structured field data in pluginData
+      const dataKey = `rich-annotation-data:${msg.categoryId}`;
+      annotatable.setPluginData(dataKey, JSON.stringify(msg.fieldData));
+
       figma.ui.postMessage({ type: "ANNOTATION_APPLIED" } satisfies PluginMessage);
-      // Refresh selection info
       figma.ui.postMessage(getSelectionInfo());
       break;
     }
@@ -220,6 +256,10 @@ figma.ui.onmessage = async (msg: UIMessage) => {
       );
       const annotatable = node as FrameNode;
       annotatable.annotations = filtered;
+
+      // Remove stored field data
+      const dataKey = `rich-annotation-data:${msg.categoryId}`;
+      annotatable.setPluginData(dataKey, "");
 
       figma.ui.postMessage({ type: "ANNOTATION_DELETED" } satisfies PluginMessage);
       figma.ui.postMessage(getSelectionInfo());
