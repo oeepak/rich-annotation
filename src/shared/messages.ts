@@ -17,6 +17,7 @@ export type UIMessage =
       nodeId: string;
       categoryId: string;
       text: string;
+      markdown?: string;
     }
   | { type: "DELETE_ANNOTATION"; nodeId: string; categoryId: string }
   | { type: "SELECT_NODE"; nodeId: string }

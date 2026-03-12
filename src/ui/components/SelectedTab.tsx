@@ -4,6 +4,7 @@ import { FieldInput } from "./FieldInput";
 import { AnnotationPreview } from "./AnnotationPreview";
 import { RawTextEditor } from "./RawTextEditor";
 import { useSelectionFields } from "../hooks/useSelection";
+import { buildMarkdown } from "@shared/buildText";
 import { postToPlugin } from "../hooks/usePluginMessage";
 import type { TabId } from "./Tabs";
 
@@ -80,11 +81,15 @@ export function SelectedTab({
   const handleApply = () => {
     if (!nodeId || !selectedCategoryId) return;
     const text = rawMode ? rawText : previewText;
+    const markdown = (!rawMode && schema)
+      ? buildMarkdown(schema.fields, fieldValues)
+      : undefined;
     postToPlugin({
       type: "APPLY_ANNOTATION",
       nodeId,
       categoryId: selectedCategoryId,
       text,
+      markdown,
     });
     setRawMode(false);
   };

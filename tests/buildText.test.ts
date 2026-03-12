@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildText } from "../src/shared/buildText";
+import { buildText, buildMarkdown } from "../src/shared/buildText";
 import type { FieldSchema } from "../src/shared/types";
 
 const experimentFields: FieldSchema[] = [
@@ -69,5 +69,26 @@ describe("buildText", () => {
     expect(lines[1]).toMatch(/^variant:/);
     expect(lines[2]).toMatch(/^surface:/);
     expect(lines[3]).toMatch(/^enabled:/);
+  });
+});
+
+describe("buildMarkdown", () => {
+  it("builds markdown with bold field names and list values", () => {
+    const fields: FieldSchema[] = [
+      { name: "experiment_id", type: "text", required: true },
+      { name: "variant", type: "select", required: true, options: ["A", "B"] },
+    ];
+    const values = { experiment_id: "test", variant: "B" };
+    const result = buildMarkdown(fields, values);
+    expect(result).toBe("**experiment_id**\n- test\n\n**variant**\n- B");
+  });
+
+  it("omits empty optional fields in markdown", () => {
+    const fields: FieldSchema[] = [
+      { name: "action", type: "text", required: true },
+      { name: "note", type: "text", required: false },
+    ];
+    const values = { action: "click", note: "" };
+    expect(buildMarkdown(fields, values)).toBe("**action**\n- click");
   });
 });

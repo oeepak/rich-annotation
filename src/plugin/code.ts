@@ -191,10 +191,13 @@ figma.ui.onmessage = async (msg: UIMessage) => {
       const existing = [...(node.annotations ?? [])];
       const idx = existing.findIndex((a) => a.categoryId === msg.categoryId);
 
-      const newAnn = {
+      const newAnn: Record<string, string | undefined> = {
         label: msg.text,
         categoryId: msg.categoryId,
       };
+      if (msg.markdown) {
+        newAnn.labelMarkdown = msg.markdown;
+      }
 
       if (idx >= 0) {
         existing[idx] = newAnn;
