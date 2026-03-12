@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildText, buildMarkdown } from "../src/shared/buildText";
+import { buildText } from "../src/shared/buildText";
 import type { FieldSchema } from "../src/shared/types";
 
 const experimentFields: FieldSchema[] = [
@@ -10,7 +10,7 @@ const experimentFields: FieldSchema[] = [
 ];
 
 describe("buildText", () => {
-  it("builds canonical field: value lines", () => {
+  it("builds markdown with bold field names and list values", () => {
     const values = {
       experiment_id: "paywall_copy_test",
       variant: "B",
@@ -19,7 +19,7 @@ describe("buildText", () => {
     };
     const result = buildText(experimentFields, values);
     expect(result).toBe(
-      "experiment_id: paywall_copy_test\nvariant: B\nsurface: pricing_modal\nenabled: true"
+      "**experiment_id**\n- paywall_copy_test\n\n**variant**\n- B\n\n**surface**\n- pricing_modal\n\n**enabled**\n- true"
     );
   });
 
@@ -31,29 +31,16 @@ describe("buildText", () => {
       enabled: "",
     };
     const result = buildText(experimentFields, values);
-    expect(result).toBe("experiment_id: test\nvariant: A");
+    expect(result).toBe("**experiment_id**\n- test\n\n**variant**\n- A");
   });
 
-  it("keeps empty required fields with empty value", () => {
+  it("keeps empty required fields", () => {
     const values = {
       experiment_id: "",
       variant: "B",
     };
     const result = buildText(experimentFields, values);
-    expect(result).toBe("experiment_id: \nvariant: B");
-  });
-
-  it("handles multiline values with indentation", () => {
-    const fields: FieldSchema[] = [
-      { name: "note", type: "text", required: false, multiline: true },
-      { name: "owner", type: "text", required: false },
-    ];
-    const values = {
-      note: "line one\nline two\nline three",
-      owner: "alice",
-    };
-    const result = buildText(fields, values);
-    expect(result).toBe("note: line one\n  line two\n  line three\nowner: alice");
+    expect(result).toBe("**experiment_id**\n- \n\n**variant**\n- B");
   });
 
   it("preserves field order from schema", () => {
@@ -64,31 +51,10 @@ describe("buildText", () => {
       surface: "modal",
     };
     const result = buildText(experimentFields, values);
-    const lines = result.split("\n");
-    expect(lines[0]).toMatch(/^experiment_id:/);
-    expect(lines[1]).toMatch(/^variant:/);
-    expect(lines[2]).toMatch(/^surface:/);
-    expect(lines[3]).toMatch(/^enabled:/);
-  });
-});
-
-describe("buildMarkdown", () => {
-  it("builds markdown with bold field names and list values", () => {
-    const fields: FieldSchema[] = [
-      { name: "experiment_id", type: "text", required: true },
-      { name: "variant", type: "select", required: true, options: ["A", "B"] },
-    ];
-    const values = { experiment_id: "test", variant: "B" };
-    const result = buildMarkdown(fields, values);
-    expect(result).toBe("**experiment_id**\n- test\n\n**variant**\n- B");
-  });
-
-  it("omits empty optional fields in markdown", () => {
-    const fields: FieldSchema[] = [
-      { name: "action", type: "text", required: true },
-      { name: "note", type: "text", required: false },
-    ];
-    const values = { action: "click", note: "" };
-    expect(buildMarkdown(fields, values)).toBe("**action**\n- click");
+    const blocks = result.split("\n\n");
+    expect(blocks[0]).toMatch(/^\*\*experiment_id\*\*/);
+    expect(blocks[1]).toMatch(/^\*\*variant\*\*/);
+    expect(blocks[2]).toMatch(/^\*\*surface\*\*/);
+    expect(blocks[3]).toMatch(/^\*\*enabled\*\*/);
   });
 });

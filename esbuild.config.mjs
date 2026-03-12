@@ -5,7 +5,7 @@ build({
   bundle: true,
   outfile: "dist/code.js",
   format: "iife",
-  target: "es2020",
+  target: "es2015",
   alias: {
     "@shared": "./src/shared",
   },

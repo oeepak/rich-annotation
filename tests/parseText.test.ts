@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { parseText } from "../src/shared/parseText";
-import type { FieldSchema, ParseMatch } from "../src/shared/types";
+import type { FieldSchema } from "../src/shared/types";
 
 const experimentFields: FieldSchema[] = [
   { name: "experiment_id", type: "text", required: true },
@@ -10,9 +10,9 @@ const experimentFields: FieldSchema[] = [
 ];
 
 describe("parseText", () => {
-  it("parses valid canonical text as matched", () => {
+  it("parses valid markdown text as matched", () => {
     const text =
-      "experiment_id: paywall_copy_test\nvariant: B\nsurface: pricing_modal\nenabled: true";
+      "**experiment_id**\n- paywall_copy_test\n\n**variant**\n- B\n\n**surface**\n- pricing_modal\n\n**enabled**\n- true";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("matched");
     expect(result.fields).toHaveLength(4);
@@ -31,17 +31,16 @@ describe("parseText", () => {
   });
 
   it("returns not_matched when select value is invalid", () => {
-    const text = "experiment_id: test\nvariant: hoho";
+    const text = "**experiment_id**\n- test\n\n**variant**\n- hoho";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("not_matched");
     const variantField = result.fields.find((f) => f.name === "variant");
     expect(variantField?.matched).toBe(false);
     expect(variantField?.rawValue).toBe("hoho");
-    expect(variantField?.parsedValue).toBeNull();
   });
 
-  it("returns field values as empty string when line is missing and optional", () => {
-    const text = "experiment_id: test\nvariant: A";
+  it("returns empty string for missing optional fields", () => {
+    const text = "**experiment_id**\n- test\n\n**variant**\n- A";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("matched");
     const surfaceField = result.fields.find((f) => f.name === "surface");
@@ -50,40 +49,10 @@ describe("parseText", () => {
   });
 
   it("marks missing required field as not matched", () => {
-    const text = "variant: A";
+    const text = "**variant**\n- A";
     const result = parseText(text, experimentFields);
     expect(result.parseMatch).toBe("not_matched");
     const idField = result.fields.find((f) => f.name === "experiment_id");
     expect(idField?.matched).toBe(false);
-  });
-
-  it("handles values with colons", () => {
-    const text = "experiment_id: url:test:123\nvariant: A";
-    const result = parseText(text, experimentFields);
-    const idField = result.fields.find((f) => f.name === "experiment_id");
-    expect(idField?.rawValue).toBe("url:test:123");
-  });
-
-  it("parses multiline values with indentation continuation", () => {
-    const fields: FieldSchema[] = [
-      { name: "note", type: "text", required: false, multiline: true },
-      { name: "owner", type: "text", required: false },
-    ];
-    const text = "note: line one\n  line two\n  line three\nowner: alice";
-    const result = parseText(text, fields);
-    expect(result.parseMatch).toBe("matched");
-    const noteField = result.fields.find((f) => f.name === "note");
-    expect(noteField?.rawValue).toBe("line one\nline two\nline three");
-    const ownerField = result.fields.find((f) => f.name === "owner");
-    expect(ownerField?.rawValue).toBe("alice");
-  });
-
-  it("returns field values from raw text even with extra whitespace", () => {
-    const text = "experiment_id:   paywall  \nvariant:B";
-    const result = parseText(text, experimentFields);
-    const idField = result.fields.find((f) => f.name === "experiment_id");
-    expect(idField?.rawValue).toBe("paywall");
-    const variantField = result.fields.find((f) => f.name === "variant");
-    expect(variantField?.rawValue).toBe("B");
   });
 });

@@ -10,29 +10,23 @@ export function parseText(
   text: string,
   schemaFields: FieldSchema[]
 ): ParseResult {
-  const lineMap = new Map<string, string>();
-  let lastKey = "";
+  const fieldMap = new Map<string, string>();
 
-  for (const line of text.split("\n")) {
-    // Continuation line: starts with whitespace
-    if (line.match(/^\s/) && lastKey) {
-      const existing = lineMap.get(lastKey) ?? "";
-      lineMap.set(lastKey, existing + "\n" + line.replace(/^\s{1,2}/, ""));
-      continue;
-    }
+  const blocks = text.split(/\n\n/);
+  for (const block of blocks) {
+    const lines = block.split("\n");
+    const headerMatch = lines[0]?.match(/^\*\*(.+?)\*\*$/);
+    if (!headerMatch) continue;
 
-    const colonIndex = line.indexOf(":");
-    if (colonIndex === -1) continue;
-
-    const key = line.slice(0, colonIndex).trim();
-    const value = line.slice(colonIndex + 1).trim();
-    lineMap.set(key, value);
-    lastKey = key;
+    const key = headerMatch[1];
+    const valueLine = lines[1] ?? "";
+    const value = valueLine.replace(/^-\s?/, "").trim();
+    fieldMap.set(key, value);
   }
 
   let allMatched = true;
   const fields: ParsedField[] = schemaFields.map((schema) => {
-    const rawValue = lineMap.get(schema.name) ?? "";
+    const rawValue = fieldMap.get(schema.name) ?? "";
     const { parsedValue, matched } = validateField(rawValue, schema);
 
     if (!matched) {
