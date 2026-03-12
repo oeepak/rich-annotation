@@ -11,11 +11,19 @@ interface SchemaTabProps {
 export function SchemaTab({ schemas, categories }: SchemaTabProps) {
   const [draft, setDraft] = useState<SchemaStore>(schemas);
   const [dirty, setDirty] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   useEffect(() => {
     setDraft(schemas);
     setDirty(false);
   }, [schemas]);
+
+  // Auto-select first category
+  useEffect(() => {
+    if (!selectedCategoryId && categories.length > 0) {
+      setSelectedCategoryId(categories[0].id);
+    }
+  }, [categories, selectedCategoryId]);
 
   const handleCategoryChange = (categoryId: string, updated: CategorySchema) => {
     setDraft((prev) => ({ ...prev, [categoryId]: updated }));
@@ -32,28 +40,23 @@ export function SchemaTab({ schemas, categories }: SchemaTabProps) {
     setDirty(false);
   };
 
-  // Ensure all categories have an entry in draft
-  const allCategoryIds = new Set([
-    ...Object.keys(draft),
-    ...categories.map((c) => c.id),
-  ]);
-
-  const categorySchemas = Array.from(allCategoryIds).map((catId) => {
+  const getSchemaForCategory = (catId: string): CategorySchema => {
     const existing = draft[catId];
+    if (existing) return existing;
     const catInfo = categories.find((c) => c.id === catId);
-    return (
-      existing ?? {
-        categoryId: catId,
-        categoryLabel: catInfo?.label ?? catId,
-        fields: [],
-      }
-    );
-  });
+    return {
+      categoryId: catId,
+      categoryLabel: catInfo?.label ?? catId,
+      fields: [],
+    };
+  };
+
+  const selectedSchema = selectedCategoryId ? getSchemaForCategory(selectedCategoryId) : null;
 
   return (
     <>
       <div className="tab-content">
-        {categorySchemas.length === 0 ? (
+        {categories.length === 0 ? (
           <div className="empty-state">
             <div>No annotation categories available.</div>
             <div style={{ fontSize: 11 }}>
@@ -61,13 +64,30 @@ export function SchemaTab({ schemas, categories }: SchemaTabProps) {
             </div>
           </div>
         ) : (
-          categorySchemas.map((cs) => (
-            <SchemaCategory
-              key={cs.categoryId}
-              schema={cs}
-              onChange={(updated) => handleCategoryChange(cs.categoryId, updated)}
-            />
-          ))
+          <>
+            <div className="section">
+              <div className="section-label">Category</div>
+              <select
+                className="select"
+                value={selectedCategoryId}
+                onChange={(e) => setSelectedCategoryId(e.target.value)}
+              >
+                <option value="">— Select Category —</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {selectedSchema && (
+              <SchemaCategory
+                key={selectedSchema.categoryId}
+                schema={selectedSchema}
+                onChange={(updated) => handleCategoryChange(selectedSchema.categoryId, updated)}
+              />
+            )}
+          </>
         )}
         <div style={{ fontSize: 10, color: "#999", textAlign: "right" }}>
           Used to build / parse annotation text
