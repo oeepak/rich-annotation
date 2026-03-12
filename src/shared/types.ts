@@ -1,12 +1,15 @@
-export type FieldType = "text" | "number" | "boolean" | "select";
+export type FieldType = "text" | "number" | "boolean" | "select" | "group";
 
 export interface FieldSchema {
   name: string;
   type: FieldType;
   required: boolean;
-  options?: string[];    // for select type
-  multiline?: boolean;   // for text type, UI-only hint
+  options?: string[];       // for select type
+  children?: FieldSchema[]; // for group type — only flat children (no nested groups)
 }
+
+// Structured field data for pluginData storage
+export type FieldData = Record<string, string | Record<string, string>>;
 
 export interface CategorySchema {
   categoryId: string;
