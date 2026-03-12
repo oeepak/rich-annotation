@@ -7,7 +7,13 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:ui": "vite build",
+    "build:plugin": "node esbuild.config.mjs",
+    "build": "npm run build:plugin && npm run build:ui",
+    "watch:ui": "vite build --watch",
+    "watch:plugin": "node esbuild.config.mjs --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
