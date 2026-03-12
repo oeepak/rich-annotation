@@ -172,7 +172,15 @@ export function OverviewTab({ annotations, schemas, categories, onNavigate }: Ov
       {filtered.map((ann, i) => {
         const cat = categories.find((c) => c.id === ann.categoryId);
         return (
-          <OverviewRow key={`${ann.nodeId}-${ann.categoryId}-${i}`} annotation={ann} categoryColor={cat?.color} />
+          <OverviewRow
+            key={`${ann.nodeId}-${ann.categoryId}-${i}`}
+            annotation={ann}
+            categoryColor={cat?.color}
+            onEdit={() => {
+              postToPlugin({ type: "SELECT_NODE", nodeId: ann.nodeId });
+              onNavigate("selected");
+            }}
+          />
         );
       })}
     </div>

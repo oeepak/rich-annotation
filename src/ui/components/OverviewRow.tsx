@@ -16,12 +16,10 @@ const COLOR_MAP: Record<string, { bg: string; fg: string }> = {
 interface OverviewRowProps {
   annotation: AnnotationInfo;
   categoryColor?: string;
+  onEdit: () => void;
 }
 
-export function OverviewRow({ annotation, categoryColor }: OverviewRowProps) {
-  const handleOpen = () => {
-    postToPlugin({ type: "SELECT_NODE", nodeId: annotation.nodeId });
-  };
+export function OverviewRow({ annotation, categoryColor, onEdit }: OverviewRowProps) {
 
   const colors = categoryColor ? COLOR_MAP[categoryColor] : undefined;
   const badgeStyle = colors
@@ -29,12 +27,19 @@ export function OverviewRow({ annotation, categoryColor }: OverviewRowProps) {
     : undefined;
 
   return (
-    <div className="row-card" onClick={handleOpen}>
+    <div className="row-card">
       <div className="row-header">
         <span className="badge" style={badgeStyle}>
           {annotation.categoryLabel || "—"}
         </span>
-        <span style={{ fontWeight: 500 }}>{annotation.nodeName}</span>
+        <span style={{ fontWeight: 500, flex: 1 }}>{annotation.nodeName}</span>
+        <button
+          className="btn btn-secondary"
+          onClick={onEdit}
+          style={{ padding: "2px 8px", fontSize: 10 }}
+        >
+          Edit
+        </button>
       </div>
       {annotation.label && (
         <div className="row-body">
