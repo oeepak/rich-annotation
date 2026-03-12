@@ -44,6 +44,13 @@ export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabPro
     });
   }
 
+  function csvEscape(val: string): string {
+    if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+      return `"${val.replace(/"/g, '""')}"`;
+    }
+    return val;
+  }
+
   const handleExport = (format: "json" | "csv") => {
     let content: string;
     let mimeType: string;
@@ -72,10 +79,10 @@ export function OverviewTab({ annotations, schemas, onNavigate }: OverviewTabPro
       const allFieldNames = Array.from(fieldNames);
 
       const rows = filtered.map((a) => {
-        const base = [a.nodeId, a.nodeName, a.nodeType, a.categoryLabel, `"${a.label.replace(/"/g, '""')}"`, a.parseMatch];
+        const base = [a.nodeId, a.nodeName, a.nodeType, a.categoryLabel, a.label, a.parseMatch].map(csvEscape);
         const fieldVals = allFieldNames.map((fn) => {
           const f = a.parsedFields.find((pf) => pf.name === fn);
-          return f ? f.rawValue : "";
+          return csvEscape(f ? f.rawValue : "");
         });
         return [...base, ...fieldVals].join(",");
       });

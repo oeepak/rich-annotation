@@ -13,7 +13,12 @@ export function buildText(
       continue;
     }
 
-    lines.push(`${field.name}: ${value}`);
+    // Handle multiline values: indent continuation lines with 2 spaces
+    const valueLines = value.split("\n");
+    lines.push(`${field.name}: ${valueLines[0]}`);
+    for (let i = 1; i < valueLines.length; i++) {
+      lines.push(`  ${valueLines[i]}`);
+    }
   }
 
   return lines.join("\n");

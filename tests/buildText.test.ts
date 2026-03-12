@@ -43,6 +43,19 @@ describe("buildText", () => {
     expect(result).toBe("experiment_id: \nvariant: B");
   });
 
+  it("handles multiline values with indentation", () => {
+    const fields: FieldSchema[] = [
+      { name: "note", type: "text", required: false, multiline: true },
+      { name: "owner", type: "text", required: false },
+    ];
+    const values = {
+      note: "line one\nline two\nline three",
+      owner: "alice",
+    };
+    const result = buildText(fields, values);
+    expect(result).toBe("note: line one\n  line two\n  line three\nowner: alice");
+  });
+
   it("preserves field order from schema", () => {
     const values = {
       enabled: "true",

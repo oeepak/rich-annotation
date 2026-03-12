@@ -64,6 +64,20 @@ describe("parseText", () => {
     expect(idField?.rawValue).toBe("url:test:123");
   });
 
+  it("parses multiline values with indentation continuation", () => {
+    const fields: FieldSchema[] = [
+      { name: "note", type: "text", required: false, multiline: true },
+      { name: "owner", type: "text", required: false },
+    ];
+    const text = "note: line one\n  line two\n  line three\nowner: alice";
+    const result = parseText(text, fields);
+    expect(result.parseMatch).toBe("matched");
+    const noteField = result.fields.find((f) => f.name === "note");
+    expect(noteField?.rawValue).toBe("line one\nline two\nline three");
+    const ownerField = result.fields.find((f) => f.name === "owner");
+    expect(ownerField?.rawValue).toBe("alice");
+  });
+
   it("returns field values from raw text even with extra whitespace", () => {
     const text = "experiment_id:   paywall  \nvariant:B";
     const result = parseText(text, experimentFields);

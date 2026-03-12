@@ -22,6 +22,21 @@ function saveSchemas(schemas: SchemaStore): void {
   figma.root.setPluginData(SCHEMA_KEY, JSON.stringify(schemas));
 }
 
+let cachedCategories: { id: string; label: string }[] = [];
+
+async function ensureCategoriesLoaded(): Promise<void> {
+  if (cachedCategories.length === 0) {
+    const cats = await figma.annotations.getAnnotationCategoriesAsync();
+    cachedCategories = cats.map((c) => ({ id: c.id, label: c.label }));
+  }
+}
+
+function getCategoryLabel(catId: string, schemas: SchemaStore): string {
+  if (schemas[catId]?.categoryLabel) return schemas[catId].categoryLabel;
+  const found = cachedCategories.find((c) => c.id === catId);
+  return found?.label ?? catId;
+}
+
 // --- Annotation Helpers ---
 
 function getAnnotationsForPage(): AnnotationInfo[] {
@@ -50,7 +65,7 @@ function getAnnotationsForPage(): AnnotationInfo[] {
           nodeName: node.name,
           nodeType: node.type,
           categoryId: catId || undefined,
-          categoryLabel: schema?.categoryLabel ?? catId,
+          categoryLabel: getCategoryLabel(catId, schemas),
           label,
           parsedFields,
           parseMatch,
@@ -129,7 +144,13 @@ function getSelectionInfo(): PluginMessage {
 
 figma.ui.onmessage = async (msg: UIMessage) => {
   switch (msg.type) {
-    case "INIT":
+    case "INIT": {
+      await ensureCategoriesLoaded();
+      const info = getSelectionInfo();
+      figma.ui.postMessage(info);
+      break;
+    }
+
     case "GET_SELECTION": {
       const info = getSelectionInfo();
       figma.ui.postMessage(info);
@@ -215,10 +236,10 @@ figma.ui.onmessage = async (msg: UIMessage) => {
     }
 
     case "GET_CATEGORIES": {
-      const categories = await figma.annotations.getAnnotationCategoriesAsync();
+      await ensureCategoriesLoaded();
       figma.ui.postMessage({
         type: "CATEGORIES_LIST",
-        categories: categories.map((c) => ({ id: c.id, label: c.label })),
+        categories: cachedCategories,
       } satisfies PluginMessage);
       break;
     }
