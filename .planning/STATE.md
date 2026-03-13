@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-migration-cleanup/02-02-PLAN.md
-last_updated: "2026-03-13T09:51:12.367Z"
+stopped_at: Completed 02-migration-cleanup/02-03-PLAN.md
+last_updated: "2026-03-13T09:57:56.150Z"
 last_activity: 2026-03-13 — Roadmap created, phases derived from requirements
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
   percent: 50
 ---
 
@@ -54,6 +54,7 @@ Progress: [█████░░░░░] 50%
 | Phase 01-build-recovery P02 | 7min | 2 tasks | 10 files |
 | Phase 02-migration-cleanup P01 | 2 | 2 tasks | 4 files |
 | Phase 02-migration-cleanup P02 | 5 | 2 tasks | 3 files |
+| Phase 02-migration-cleanup P03 | 4 | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,9 @@ Recent decisions affecting current work:
 - [Phase 02-migration-cleanup]: cfp Dropdown value must be null (not empty string) to show placeholder; convert with value || null
 - [Phase 02-migration-cleanup]: OverviewTab filter: sentinel ALL='__all__' avoids cfp Dropdown null/placeholder confusion when categoryFilter is empty string
 - [Phase 02-migration-cleanup]: UIMIG-05 (Banner/Divider): satisfied as no-action-needed — no existing alert divs or hr elements to replace
+- [Phase 02-migration-cleanup]: AnnotationCategory defined once in shared/types.ts — no more inline { id, label, color } objects at call sites
+- [Phase 02-migration-cleanup]: buildParsedFieldsFromData extracted to shared/ — plugin/code.ts and useSelection.ts both import it
+- [Phase 02-migration-cleanup]: CategoryDropdown wraps cfp Dropdown with AnnotationCategory[] input — SelectedTab and SchemaTab use it
 
 ### Pending Todos
 
@@ -88,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T09:51:12.365Z
-Stopped at: Completed 02-migration-cleanup/02-02-PLAN.md
+Last session: 2026-03-13T09:57:56.148Z
+Stopped at: Completed 02-migration-cleanup/02-03-PLAN.md
 Resume file: None

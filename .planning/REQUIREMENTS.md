@@ -20,14 +20,14 @@
 - [x] **UIMIG-03**: Dropdown을 cfp Dropdown으로 교체 (null 초기값 처리 포함)
 - [x] **UIMIG-04**: Checkbox를 cfp Checkbox로 교체 (boolean/string 변환 포함)
 - [x] **UIMIG-05**: Banner, Divider 등 보조 UI 컴포넌트를 cfp로 교체
-- [ ] **UIMIG-06**: cfp 컴포넌트 적용 후 불필요한 커스텀 CSS 제거
+- [x] **UIMIG-06**: cfp 컴포넌트 적용 후 불필요한 커스텀 CSS 제거
 
 ### Code Improvement
 
-- [ ] **CODE-01**: 카테고리 드롭다운 중복 로직을 공통 컴포넌트로 추출
-- [ ] **CODE-02**: buildParsedFieldsFromData 함수를 shared 모듈로 추출 (plugin/UI 중복 제거)
-- [ ] **CODE-03**: AnnotationCategory 타입을 shared/types.ts로 중앙화 (5곳 인라인 제거)
-- [ ] **CODE-04**: schema.required 잔재 참조 제거 (FieldInput.tsx의 4곳)
+- [x] **CODE-01**: 카테고리 드롭다운 중복 로직을 공통 컴포넌트로 추출
+- [x] **CODE-02**: buildParsedFieldsFromData 함수를 shared 모듈로 추출 (plugin/UI 중복 제거)
+- [x] **CODE-03**: AnnotationCategory 타입을 shared/types.ts로 중앙화 (5곳 인라인 제거)
+- [x] **CODE-04**: schema.required 잔재 참조 제거 (FieldInput.tsx의 4곳)
 
 ### Testing
 
@@ -76,11 +76,11 @@
 | UIMIG-03 | Phase 2 | Complete |
 | UIMIG-04 | Phase 2 | Complete |
 | UIMIG-05 | Phase 2 | Complete |
-| UIMIG-06 | Phase 2 | Pending |
-| CODE-01 | Phase 2 | Pending |
-| CODE-02 | Phase 2 | Pending |
-| CODE-03 | Phase 2 | Pending |
-| CODE-04 | Phase 2 | Pending |
+| UIMIG-06 | Phase 2 | Complete |
+| CODE-01 | Phase 2 | Complete |
+| CODE-02 | Phase 2 | Complete |
+| CODE-03 | Phase 2 | Complete |
+| CODE-04 | Phase 2 | Complete |
 | TEST-01 | Phase 3 | Pending |
 | TEST-02 | Phase 3 | Pending |
 | TEST-03 | Phase 3 | Pending |
