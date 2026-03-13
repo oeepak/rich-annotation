@@ -29,8 +29,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. No `from "react"` imports remain anywhere in `src/ui/`
 **Plans:** 2/2 plans complete
 Plans:
-- [ ] 01-01-PLAN.md — Fix tsconfig, create usePluginMessage hook, rewrite App.tsx with cfp messaging
-- [ ] 01-02-PLAN.md — Fix React imports in all 8 components, cast e.target types, remove schema.required, fix test file, verify full build
+- [x] 01-01-PLAN.md — Fix tsconfig, create usePluginMessage hook, rewrite App.tsx with cfp messaging
+- [x] 01-02-PLAN.md — Fix React imports in all 8 components, cast e.target types, remove schema.required, fix test file, verify full build
 
 ### Phase 2: Migration + Cleanup
 **Goal**: All interactive form elements render with Figma-native cfp components and code duplication is eliminated
@@ -42,7 +42,11 @@ Plans:
   3. `AnnotationCategory` is defined in exactly one place (`src/shared/types.ts`) with no inline duplicates
   4. Category dropdown logic and `buildParsedFieldsFromData` are each defined once and shared across plugin/UI
   5. `npm run build` remains green after all component swaps
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — Swap leaf components (FieldInput, SchemaFieldRow, OverviewRow, SchemaCategory) to cfp UI components
+- [ ] 02-02-PLAN.md — Swap container components (SelectedTab, SchemaTab, OverviewTab) to cfp UI components
+- [ ] 02-03-PLAN.md — Extract shared code (AnnotationCategory, buildParsedFieldsFromData, CategoryDropdown) and clean up dead CSS
 
 ### Phase 3: Testing
 **Goal**: Every module — shared logic, plugin message handlers, and UI components — has unit and component test coverage
@@ -63,5 +67,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Build Recovery | 2/2 | Complete   | 2026-03-13 |
-| 2. Migration + Cleanup | 0/? | Not started | - |
+| 2. Migration + Cleanup | 0/3 | Planning complete | - |
 | 3. Testing | 0/? | Not started | - |
