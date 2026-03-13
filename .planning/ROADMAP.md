@@ -27,7 +27,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Plugin loads in Figma and all three tabs (Selected, Overview, Schema) are accessible
   3. Annotating a node and reading it back works end-to-end via the cfp emit/on messaging path
   4. No `from "react"` imports remain anywhere in `src/ui/`
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 01-01-PLAN.md — Fix tsconfig, create usePluginMessage hook, rewrite App.tsx with cfp messaging
+- [ ] 01-02-PLAN.md — Fix React imports in all 8 components, cast e.target types, remove schema.required, fix test file, verify full build
 
 ### Phase 2: Migration + Cleanup
 **Goal**: All interactive form elements render with Figma-native cfp components and code duplication is eliminated
@@ -59,6 +62,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Build Recovery | 0/? | Not started | - |
+| 1. Build Recovery | 0/2 | Planned | - |
 | 2. Migration + Cleanup | 0/? | Not started | - |
 | 3. Testing | 0/? | Not started | - |
