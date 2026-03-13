@@ -1,0 +1,31 @@
+declare const styles: {
+  readonly "action-bar": string;
+  readonly "active": string;
+  readonly "badge": string;
+  readonly "badge-category": string;
+  readonly "badge-matched": string;
+  readonly "badge-no-schema": string;
+  readonly "badge-not-matched": string;
+  readonly "empty-state": string;
+  readonly "error": string;
+  readonly "field-group": string;
+  readonly "field-label": string;
+  readonly "plugin-container": string;
+  readonly "preview-box": string;
+  readonly "preview-line": string;
+  readonly "row-body": string;
+  readonly "row-card": string;
+  readonly "row-fields": string;
+  readonly "row-header": string;
+  readonly "schema-category": string;
+  readonly "schema-category-header": string;
+  readonly "schema-field-row": string;
+  readonly "search-bar": string;
+  readonly "section": string;
+  readonly "section-label": string;
+  readonly "tab-bar": string;
+  readonly "tab-content": string;
+  readonly "toolbar": string;
+};
+export = styles;
+

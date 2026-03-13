@@ -1,8 +1,8 @@
 import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Button, Dropdown } from "@create-figma-plugin/ui";
-import type { DropdownOption } from "@create-figma-plugin/ui";
+import { Button } from "@create-figma-plugin/ui";
 import type { SchemaStore, AnnotationInfo, CategorySchema, AnnotationCategory } from "@shared/types";
+import { CategoryDropdown } from "./CategoryDropdown";
 import { FieldInput, GroupFieldInput } from "./FieldInput";
 import { AnnotationPreview } from "./AnnotationPreview";
 import { RawTextEditor } from "./RawTextEditor";
@@ -80,11 +80,6 @@ export function SelectedTab({
   const parseMatch = currentAnnotation?.parseMatch ?? "no_schema";
   const hasSchema = !!schema;
 
-  const categoryOptions: DropdownOption[] = categories.map((cat) => ({
-    value: cat.id,
-    text: cat.label,
-  }));
-
   return (
     <>
       <div className="tab-content">
@@ -99,14 +94,13 @@ export function SelectedTab({
         {/* Category Selection */}
         <div className="section">
           <div className="section-label">Category</div>
-          <Dropdown
-            value={selectedCategoryId || null}
-            options={categoryOptions}
+          <CategoryDropdown
+            categories={categories}
+            value={selectedCategoryId}
             onValueChange={(val) => {
               setSelectedCategoryId(val);
               setRawMode(false);
             }}
-            placeholder="— Select Category —"
           />
         </div>
 

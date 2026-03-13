@@ -1,8 +1,8 @@
 import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Button, Dropdown } from "@create-figma-plugin/ui";
-import type { DropdownOption } from "@create-figma-plugin/ui";
+import { Button } from "@create-figma-plugin/ui";
 import type { SchemaStore, CategorySchema, AnnotationCategory } from "@shared/types";
+import { CategoryDropdown } from "./CategoryDropdown";
 import { SchemaCategory } from "./SchemaCategory";
 import { postToPlugin } from "../hooks/usePluginMessage";
 
@@ -57,11 +57,6 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
 
   const selectedSchema = selectedCategoryId ? getSchemaForCategory(selectedCategoryId) : null;
 
-  const categoryOptions: DropdownOption[] = categories.map((cat) => ({
-    value: cat.id,
-    text: cat.label,
-  }));
-
   return (
     <>
       <div className="tab-content">
@@ -76,11 +71,10 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
           <>
             <div className="section">
               <div className="section-label">Category</div>
-              <Dropdown
-                value={selectedCategoryId || null}
-                options={categoryOptions}
+              <CategoryDropdown
+                categories={categories}
+                value={selectedCategoryId}
                 onValueChange={(val) => setSelectedCategoryId(val)}
-                placeholder="— Select Category —"
               />
             </div>
             {selectedSchema && (
