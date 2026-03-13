@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-build-recovery/01-02-PLAN.md
-last_updated: "2026-03-13T07:29:44.522Z"
+stopped_at: Completed 02-migration-cleanup/02-01-PLAN.md
+last_updated: "2026-03-13T09:47:28.535Z"
 last_activity: 2026-03-13 — Roadmap created, phases derived from requirements
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
   percent: 50
 ---
 
@@ -52,6 +52,7 @@ Progress: [█████░░░░░] 50%
 *Updated after each plan completion*
 | Phase 01-build-recovery P01 | 1min | 2 tasks | 3 files |
 | Phase 01-build-recovery P02 | 7min | 2 tasks | 10 files |
+| Phase 02-migration-cleanup P01 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 01-build-recovery]: UI_READY emitted after all on<Handler> registrations to avoid race condition with plugin responses
 - [Phase 01-build-recovery]: jsxFragmentFactory: Fragment must be set in tsconfig when jsxFactory is set and components use <> syntax
 - [Phase 01-build-recovery]: schema.required removed from data layer (SchemaFieldRow/SchemaCategory) — not in FieldSchema type
+- [Phase 02-migration-cleanup]: cfp Textbox has no error variant — use a separate field-error div below input (matches existing test expectations)
+- [Phase 02-migration-cleanup]: boolean fields use cfp Checkbox (not Dropdown) with boolean<->string conversion at boundary
+- [Phase 02-migration-cleanup]: cfp Dropdown value must be null (not empty string) to show placeholder; convert with value || null
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T07:27:47.435Z
-Stopped at: Completed 01-build-recovery/01-02-PLAN.md
+Last session: 2026-03-13T09:47:28.530Z
+Stopped at: Completed 02-migration-cleanup/02-01-PLAN.md
 Resume file: None

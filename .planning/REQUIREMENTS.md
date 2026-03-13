@@ -15,10 +15,10 @@
 
 ### UI Migration
 
-- [ ] **UIMIG-01**: Button 컴포넌트를 @create-figma-plugin/ui Button으로 교체
-- [ ] **UIMIG-02**: Textbox/TextboxNumeric/TextboxMultiline을 cfp 컴포넌트로 교체
-- [ ] **UIMIG-03**: Dropdown을 cfp Dropdown으로 교체 (null 초기값 처리 포함)
-- [ ] **UIMIG-04**: Checkbox를 cfp Checkbox로 교체 (boolean/string 변환 포함)
+- [x] **UIMIG-01**: Button 컴포넌트를 @create-figma-plugin/ui Button으로 교체
+- [x] **UIMIG-02**: Textbox/TextboxNumeric/TextboxMultiline을 cfp 컴포넌트로 교체
+- [x] **UIMIG-03**: Dropdown을 cfp Dropdown으로 교체 (null 초기값 처리 포함)
+- [x] **UIMIG-04**: Checkbox를 cfp Checkbox로 교체 (boolean/string 변환 포함)
 - [ ] **UIMIG-05**: Banner, Divider 등 보조 UI 컴포넌트를 cfp로 교체
 - [ ] **UIMIG-06**: cfp 컴포넌트 적용 후 불필요한 커스텀 CSS 제거
 
@@ -71,10 +71,10 @@
 | BUILD-03 | Phase 1 | Complete |
 | BUILD-04 | Phase 1 | Complete |
 | BUILD-05 | Phase 1 | Complete |
-| UIMIG-01 | Phase 2 | Pending |
-| UIMIG-02 | Phase 2 | Pending |
-| UIMIG-03 | Phase 2 | Pending |
-| UIMIG-04 | Phase 2 | Pending |
+| UIMIG-01 | Phase 2 | Complete |
+| UIMIG-02 | Phase 2 | Complete |
+| UIMIG-03 | Phase 2 | Complete |
+| UIMIG-04 | Phase 2 | Complete |
 | UIMIG-05 | Phase 2 | Pending |
 | UIMIG-06 | Phase 2 | Pending |
 | CODE-01 | Phase 2 | Pending |

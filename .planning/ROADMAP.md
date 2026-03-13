@@ -42,7 +42,7 @@ Plans:
   3. `AnnotationCategory` is defined in exactly one place (`src/shared/types.ts`) with no inline duplicates
   4. Category dropdown logic and `buildParsedFieldsFromData` are each defined once and shared across plugin/UI
   5. `npm run build` remains green after all component swaps
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 Plans:
 - [ ] 02-01-PLAN.md — Swap leaf components (FieldInput, SchemaFieldRow, OverviewRow, SchemaCategory) to cfp UI components
 - [ ] 02-02-PLAN.md — Swap container components (SelectedTab, SchemaTab, OverviewTab) to cfp UI components
@@ -67,5 +67,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Build Recovery | 2/2 | Complete   | 2026-03-13 |
-| 2. Migration + Cleanup | 0/3 | Planning complete | - |
+| 2. Migration + Cleanup | 1/3 | In Progress|  |
 | 3. Testing | 0/? | Not started | - |
