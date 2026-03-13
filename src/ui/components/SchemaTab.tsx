@@ -1,5 +1,7 @@
 import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { Button, Dropdown } from "@create-figma-plugin/ui";
+import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { SchemaStore, CategorySchema } from "@shared/types";
 import { SchemaCategory } from "./SchemaCategory";
 import { postToPlugin } from "../hooks/usePluginMessage";
@@ -55,6 +57,11 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
 
   const selectedSchema = selectedCategoryId ? getSchemaForCategory(selectedCategoryId) : null;
 
+  const categoryOptions: DropdownOption[] = categories.map((cat) => ({
+    value: cat.id,
+    text: cat.label,
+  }));
+
   return (
     <>
       <div className="tab-content">
@@ -69,18 +76,12 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
           <>
             <div className="section">
               <div className="section-label">Category</div>
-              <select
-                className="select"
-                value={selectedCategoryId}
-                onChange={(e) => setSelectedCategoryId((e.target as HTMLSelectElement).value)}
-              >
-                <option value="">— Select Category —</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
+              <Dropdown
+                value={selectedCategoryId || null}
+                options={categoryOptions}
+                onValueChange={(val) => setSelectedCategoryId(val)}
+                placeholder="— Select Category —"
+              />
             </div>
             {selectedSchema && (
               <SchemaCategory
@@ -97,16 +98,10 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
       </div>
       <div className="action-bar">
         <div style={{ display: "flex", gap: 6 }}>
-          <button className="btn btn-secondary" onClick={onBack}>
-            Back
-          </button>
-          <button className="btn btn-secondary" onClick={handleReset} disabled={!dirty}>
-            Reset
-          </button>
+          <Button secondary onClick={onBack}>Back</Button>
+          <Button secondary onClick={handleReset} disabled={!dirty}>Reset</Button>
         </div>
-        <button className="btn btn-primary" onClick={handleSave} disabled={!dirty}>
-          Save
-        </button>
+        <Button onClick={handleSave} disabled={!dirty}>Save</Button>
       </div>
     </>
   );

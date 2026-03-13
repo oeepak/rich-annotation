@@ -1,5 +1,7 @@
 import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { Button, Dropdown } from "@create-figma-plugin/ui";
+import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { SchemaStore, AnnotationInfo, CategorySchema } from "@shared/types";
 import { FieldInput, GroupFieldInput } from "./FieldInput";
 import { AnnotationPreview } from "./AnnotationPreview";
@@ -78,6 +80,11 @@ export function SelectedTab({
   const parseMatch = currentAnnotation?.parseMatch ?? "no_schema";
   const hasSchema = !!schema;
 
+  const categoryOptions: DropdownOption[] = categories.map((cat) => ({
+    value: cat.id,
+    text: cat.label,
+  }));
+
   return (
     <>
       <div className="tab-content">
@@ -92,21 +99,15 @@ export function SelectedTab({
         {/* Category Selection */}
         <div className="section">
           <div className="section-label">Category</div>
-          <select
-            className="select"
-            value={selectedCategoryId}
-            onChange={(e) => {
-              setSelectedCategoryId((e.target as HTMLSelectElement).value);
+          <Dropdown
+            value={selectedCategoryId || null}
+            options={categoryOptions}
+            onValueChange={(val) => {
+              setSelectedCategoryId(val);
               setRawMode(false);
             }}
-          >
-            <option value="">— Select Category —</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.label}
-              </option>
-            ))}
-          </select>
+            placeholder="— Select Category —"
+          />
         </div>
 
         {selectedCategoryId && !hasSchema && (
@@ -116,12 +117,8 @@ export function SelectedTab({
               Define a schema to use structured fields.
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              <button className="btn btn-secondary" onClick={onGoToSchema}>
-                Schema
-              </button>
-              <button className="btn btn-secondary" onClick={() => setRawMode(true)}>
-                Raw Text
-              </button>
+              <Button secondary onClick={onGoToSchema}>Schema</Button>
+              <Button secondary onClick={() => setRawMode(true)}>Raw Text</Button>
             </div>
           </div>
         )}
@@ -147,9 +144,7 @@ export function SelectedTab({
             <div className="section">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div className="section-label">Fields</div>
-                <button className="btn btn-secondary" onClick={onGoToSchema} style={{ padding: "2px 8px", fontSize: 10 }}>
-                  Schema
-                </button>
+                <Button secondary onClick={onGoToSchema}>Schema</Button>
               </div>
               {schema.fields.map((field) => {
                 const parsed = parsedFields.find((p) => p.name === field.name);
@@ -198,20 +193,13 @@ export function SelectedTab({
         <div className="action-bar">
           <div style={{ display: "flex", gap: 6 }}>
             {(hasSchema || rawMode) && (
-              <button
-                className="btn btn-secondary"
-                onClick={() => setRawMode(!rawMode)}
-              >
+              <Button secondary onClick={() => setRawMode(!rawMode)}>
                 {rawMode ? "Fields" : "Raw"}
-              </button>
+              </Button>
             )}
-            <button className="btn btn-danger" onClick={handleDelete}>
-              Delete
-            </button>
+            <Button danger onClick={handleDelete}>Delete</Button>
           </div>
-          <button className="btn btn-primary" onClick={handleApply}>
-            Apply
-          </button>
+          <Button onClick={handleApply}>Apply</Button>
         </div>
       )}
     </>
