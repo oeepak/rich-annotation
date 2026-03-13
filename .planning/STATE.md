@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-migration-cleanup/02-01-PLAN.md
-last_updated: "2026-03-13T09:47:28.535Z"
+stopped_at: Completed 02-migration-cleanup/02-02-PLAN.md
+last_updated: "2026-03-13T09:51:12.367Z"
 last_activity: 2026-03-13 — Roadmap created, phases derived from requirements
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
   percent: 50
 ---
 
@@ -53,6 +53,7 @@ Progress: [█████░░░░░] 50%
 | Phase 01-build-recovery P01 | 1min | 2 tasks | 3 files |
 | Phase 01-build-recovery P02 | 7min | 2 tasks | 10 files |
 | Phase 02-migration-cleanup P01 | 2 | 2 tasks | 4 files |
+| Phase 02-migration-cleanup P02 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 02-migration-cleanup]: cfp Textbox has no error variant — use a separate field-error div below input (matches existing test expectations)
 - [Phase 02-migration-cleanup]: boolean fields use cfp Checkbox (not Dropdown) with boolean<->string conversion at boundary
 - [Phase 02-migration-cleanup]: cfp Dropdown value must be null (not empty string) to show placeholder; convert with value || null
+- [Phase 02-migration-cleanup]: OverviewTab filter: sentinel ALL='__all__' avoids cfp Dropdown null/placeholder confusion when categoryFilter is empty string
+- [Phase 02-migration-cleanup]: UIMIG-05 (Banner/Divider): satisfied as no-action-needed — no existing alert divs or hr elements to replace
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T09:47:28.530Z
-Stopped at: Completed 02-migration-cleanup/02-01-PLAN.md
+Last session: 2026-03-13T09:51:12.365Z
+Stopped at: Completed 02-migration-cleanup/02-02-PLAN.md
 Resume file: None
