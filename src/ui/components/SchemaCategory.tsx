@@ -13,7 +13,7 @@ export function SchemaCategory({ schema, onChange }: SchemaCategoryProps) {
       ...schema,
       fields: [
         ...schema.fields,
-        { name: "", type: "text", required: false },
+        { name: "", type: "text" },
       ],
     });
   };

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import type { SchemaStore, CategorySchema } from "@shared/types";
 import { SchemaCategory } from "./SchemaCategory";

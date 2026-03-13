@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import type { SchemaStore, AnnotationInfo, CategorySchema } from "@shared/types";
 import { FieldInput, GroupFieldInput } from "./FieldInput";

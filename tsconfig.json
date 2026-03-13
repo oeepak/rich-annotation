@@ -6,6 +6,7 @@
     "moduleResolution": "Node",
     "jsx": "react",
     "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "lib": ["DOM", "ES2020"],
     "outDir": "build",
     "skipLibCheck": true,

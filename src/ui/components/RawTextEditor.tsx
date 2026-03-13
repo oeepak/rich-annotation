@@ -1,3 +1,4 @@
+import { h, Fragment } from 'preact';
 import { TextboxMultiline } from "@create-figma-plugin/ui";
 
 interface RawTextEditorProps {

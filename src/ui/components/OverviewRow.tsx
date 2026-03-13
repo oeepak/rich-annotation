@@ -21,7 +21,7 @@ interface OverviewRowProps {
 
 export function OverviewRow({ annotation, categoryColor, onEdit }: OverviewRowProps) {
 
-  const colors = categoryColor ? COLOR_MAP[categoryColor] : undefined;
+  const colors = categoryColor ? COLOR_MAP[categoryColor.toLowerCase()] : undefined;
   const badgeStyle = colors
     ? { background: colors.bg, color: colors.fg }
     : undefined;

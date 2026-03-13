@@ -28,7 +28,7 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
             ...field,
             type: newType,
             options: newType === "select" ? field.options ?? [""] : undefined,
-            children: newType === "group" ? field.children ?? [{ name: "", type: "text", required: false }] : undefined,
+            children: newType === "group" ? field.children ?? [{ name: "", type: "text" }] : undefined,
           });
         }}
         style={{ flex: 1 }}
@@ -37,14 +37,6 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
           <option key={t} value={t}>{t}</option>
         ))}
       </select>
-      <label style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11 }}>
-        <input
-          type="checkbox"
-          checked={field.required}
-          onChange={(e) => onChange({ ...field, required: (e.target as HTMLInputElement).checked })}
-        />
-        req
-      </label>
       <button className="btn btn-danger" onClick={onDelete} style={{ padding: "2px 6px" }}>
         ×
       </button>
@@ -85,7 +77,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
     const addChild = () => {
       onChange({
         ...field,
-        children: [...children, { name: "", type: "text", required: false }],
+        children: [...children, { name: "", type: "text" }],
       });
     };
 
@@ -129,14 +121,6 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
                   <option key={t} value={t}>{t}</option>
                 ))}
               </select>
-              <label style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11 }}>
-                <input
-                  type="checkbox"
-                  checked={child.required}
-                  onChange={(e) => updateChild(i, { ...child, required: (e.target as HTMLInputElement).checked })}
-                />
-                req
-              </label>
               <button className="btn btn-danger" onClick={() => deleteChild(i)} style={{ padding: "2px 6px" }}>
                 ×
               </button>
