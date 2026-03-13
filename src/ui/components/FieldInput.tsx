@@ -1,4 +1,6 @@
 import { h } from 'preact';
+import { Textbox, TextboxNumeric, Dropdown, Checkbox } from "@create-figma-plugin/ui";
+import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { FieldSchema } from "@shared/types";
 
 interface FieldInputProps {
@@ -16,24 +18,24 @@ interface GroupFieldInputProps {
 }
 
 export function FieldInput({ schema, value, matched, onChange }: FieldInputProps) {
-  const errorClass = !matched && value !== "" ? " error" : "";
+  const showError = !matched && value !== "";
 
   if (schema.type === "select") {
+    const options: DropdownOption[] = [
+      { value: "" },
+      ...(schema.options ?? []).map((opt) => ({ value: opt, text: opt })),
+    ];
     return (
       <div className="field-group">
         <div className="field-label">
           {schema.name}
         </div>
-        <select
-          className={`select${errorClass}`}
-          value={value}
-          onChange={(e) => onChange((e.target as HTMLSelectElement).value)}
-        >
-          <option value="">—</option>
-          {(schema.options ?? []).map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
+        <Dropdown value={value || null} options={options} onValueChange={(val) => onChange(val)} placeholder="—" />
+        {showError && (
+          <div className="field-error" style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
+            Not a valid option
+          </div>
+        )}
       </div>
     );
   }
@@ -41,34 +43,41 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
   if (schema.type === "boolean") {
     return (
       <div className="field-group">
-        <div className="field-label">
+        <Checkbox value={value === "true"} onValueChange={(val: boolean) => onChange(val ? "true" : "false")}>
           {schema.name}
-        </div>
-        <select
-          className={`select${errorClass}`}
-          value={value}
-          onChange={(e) => onChange((e.target as HTMLSelectElement).value)}
-        >
-          <option value="">—</option>
-          <option value="true">true</option>
-          <option value="false">false</option>
-        </select>
+        </Checkbox>
       </div>
     );
   }
 
-  // text or number
+  if (schema.type === "number") {
+    return (
+      <div className="field-group">
+        <div className="field-label">
+          {schema.name}
+        </div>
+        <TextboxNumeric value={value} onValueInput={(val) => onChange(val)} />
+        {showError && (
+          <div className="field-error" style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
+            Type mismatch
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // text (default)
   return (
     <div className="field-group">
       <div className="field-label">
         {schema.name}
       </div>
-      <input
-        className={`input${errorClass}`}
-        type={schema.type === "number" ? "number" : "text"}
-        value={value}
-        onChange={(e) => onChange((e.target as HTMLInputElement).value)}
-      />
+      <Textbox value={value} onValueInput={(val) => onChange(val)} />
+      {showError && (
+        <div className="field-error" style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
+          Type mismatch
+        </div>
+      )}
     </div>
   );
 }
