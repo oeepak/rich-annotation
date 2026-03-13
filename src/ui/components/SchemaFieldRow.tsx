@@ -1,4 +1,6 @@
 import { h } from 'preact';
+import { Button, Textbox, Dropdown } from "@create-figma-plugin/ui";
+import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { FieldSchema, FieldType } from "@shared/types";
 
 interface SchemaFieldRowProps {
@@ -10,20 +12,22 @@ interface SchemaFieldRowProps {
 const fieldTypes: FieldType[] = ["text", "number", "boolean", "select", "group"];
 
 export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProps) {
+  const typeOptions: DropdownOption[] = fieldTypes.map((t) => ({ value: t, text: t }));
+
   return (
     <div className="schema-field-row">
-      <input
-        className="input"
-        placeholder="field name"
-        value={field.name}
-        onChange={(e) => onChange({ ...field, name: (e.target as HTMLInputElement).value })}
-        style={{ flex: 2 }}
-      />
-      <select
-        className="select"
+      <div style={{ flex: 2 }}>
+        <Textbox
+          value={field.name}
+          onValueInput={(val) => onChange({ ...field, name: val })}
+          placeholder="field name"
+        />
+      </div>
+      <Dropdown
         value={field.type}
-        onChange={(e) => {
-          const newType = (e.target as HTMLSelectElement).value as FieldType;
+        options={typeOptions}
+        onValueChange={(val) => {
+          const newType = val as FieldType;
           onChange({
             ...field,
             type: newType,
@@ -31,15 +35,8 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
             children: newType === "group" ? field.children ?? [{ name: "", type: "text" }] : undefined,
           });
         }}
-        style={{ flex: 1 }}
-      >
-        {fieldTypes.map((t) => (
-          <option key={t} value={t}>{t}</option>
-        ))}
-      </select>
-      <button className="btn btn-danger" onClick={onDelete} style={{ padding: "2px 6px" }}>
-        ×
-      </button>
+      />
+      <Button danger onClick={onDelete}>x</Button>
     </div>
   );
 }
@@ -54,17 +51,15 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
     return (
       <div style={{ marginLeft: 8, marginBottom: 4 }}>
         <span style={{ fontSize: 10, color: "#999" }}>options: </span>
-        <input
-          className="input"
+        <Textbox
           value={(field.options ?? []).join(", ")}
-          onChange={(e) =>
+          onValueInput={(val) =>
             onChange({
               ...field,
-              options: (e.target as HTMLInputElement).value.split(",").map((s: string) => s.trim()).filter(Boolean),
+              options: val.split(",").map((s: string) => s.trim()).filter(Boolean),
             })
           }
           placeholder="A, B, C"
-          style={{ width: "calc(100% - 60px)", display: "inline-block" }}
         />
       </div>
     );
@@ -73,6 +68,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
   if (field.type === "group") {
     const children = field.children ?? [];
     const childTypes: FieldType[] = ["text", "number", "boolean", "select"];
+    const childTypeOptions: DropdownOption[] = childTypes.map((t) => ({ value: t, text: t }));
 
     const addChild = () => {
       onChange({
@@ -97,60 +93,45 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
         {children.map((child, i) => (
           <div key={i} style={{ marginBottom: 4 }}>
             <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-              <input
-                className="input"
-                placeholder="child name"
-                value={child.name}
-                onChange={(e) => updateChild(i, { ...child, name: (e.target as HTMLInputElement).value })}
-                style={{ flex: 2 }}
-              />
-              <select
-                className="select"
+              <div style={{ flex: 2 }}>
+                <Textbox
+                  value={child.name}
+                  onValueInput={(val) => updateChild(i, { ...child, name: val })}
+                  placeholder="child name"
+                />
+              </div>
+              <Dropdown
                 value={child.type}
-                onChange={(e) => {
-                  const t = (e.target as HTMLSelectElement).value as FieldType;
+                options={childTypeOptions}
+                onValueChange={(val) => {
+                  const t = val as FieldType;
                   updateChild(i, {
                     ...child,
                     type: t,
                     options: t === "select" ? child.options ?? [""] : undefined,
                   });
                 }}
-                style={{ flex: 1 }}
-              >
-                {childTypes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-              <button className="btn btn-danger" onClick={() => deleteChild(i)} style={{ padding: "2px 6px" }}>
-                ×
-              </button>
+              />
+              <Button danger onClick={() => deleteChild(i)}>x</Button>
             </div>
             {child.type === "select" && (
               <div style={{ marginLeft: 8, marginTop: 2 }}>
                 <span style={{ fontSize: 10, color: "#999" }}>options: </span>
-                <input
-                  className="input"
+                <Textbox
                   value={(child.options ?? []).join(", ")}
-                  onChange={(e) =>
+                  onValueInput={(val) =>
                     updateChild(i, {
                       ...child,
-                      options: (e.target as HTMLInputElement).value.split(",").map((s: string) => s.trim()).filter(Boolean),
+                      options: val.split(",").map((s: string) => s.trim()).filter(Boolean),
                     })
                   }
                   placeholder="A, B, C"
-                  style={{ width: "calc(100% - 60px)", display: "inline-block" }}
                 />
               </div>
             )}
           </div>
         ))}
-        <button
-          className="btn btn-secondary"
-          onClick={addChild}
-          style={{ fontSize: 10, padding: "2px 8px" }}
-        >
-          + Child
-        </button>
+        <Button secondary onClick={addChild}>+ Child</Button>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { Button } from "@create-figma-plugin/ui";
 import type { AnnotationInfo } from "@shared/types";
 import { postToPlugin } from "../hooks/usePluginMessage";
 
@@ -33,13 +34,7 @@ export function OverviewRow({ annotation, categoryColor, onEdit }: OverviewRowPr
           {annotation.categoryLabel || "—"}
         </span>
         <span style={{ fontWeight: 500, flex: 1 }}>{annotation.nodeName}</span>
-        <button
-          className="btn btn-secondary"
-          onClick={onEdit}
-          style={{ padding: "2px 8px", fontSize: 10 }}
-        >
-          Edit
-        </button>
+        <Button secondary onClick={onEdit}>Edit</Button>
       </div>
       {annotation.label && (
         <div className="row-body">
