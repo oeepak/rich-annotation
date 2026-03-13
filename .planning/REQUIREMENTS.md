@@ -7,10 +7,10 @@
 
 ### Build Recovery
 
-- [ ] **BUILD-01**: tsconfig.json JSX 설정을 cfp 빌드와 호환되게 수정 (jsx: "react", jsxFactory: "h")
+- [x] **BUILD-01**: tsconfig.json JSX 설정을 cfp 빌드와 호환되게 수정 (jsx: "react", jsxFactory: "h")
 - [ ] **BUILD-02**: 모든 UI 파일에서 React 임포트를 제거하고 preact/hooks + `import { h } from 'preact'`로 전환
-- [ ] **BUILD-03**: usePluginMessage 훅을 cfp emit/on 패턴으로 재구축
-- [ ] **BUILD-04**: 불필요한 PluginMessage union 타입 제거, EventHandler 패턴으로 통일
+- [x] **BUILD-03**: usePluginMessage 훅을 cfp emit/on 패턴으로 재구축
+- [x] **BUILD-04**: 불필요한 PluginMessage union 타입 제거, EventHandler 패턴으로 통일
 - [ ] **BUILD-05**: `npm run build`가 에러 없이 성공
 
 ### UI Migration
@@ -66,10 +66,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUILD-01 | Phase 1 | Pending |
+| BUILD-01 | Phase 1 | Complete |
 | BUILD-02 | Phase 1 | Pending |
-| BUILD-03 | Phase 1 | Pending |
-| BUILD-04 | Phase 1 | Pending |
+| BUILD-03 | Phase 1 | Complete |
+| BUILD-04 | Phase 1 | Complete |
 | BUILD-05 | Phase 1 | Pending |
 | UIMIG-01 | Phase 2 | Pending |
 | UIMIG-02 | Phase 2 | Pending |

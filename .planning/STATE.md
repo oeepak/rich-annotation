@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: planning
+stopped_at: Completed 01-build-recovery/01-01-PLAN.md
+last_updated: "2026-03-13T07:21:59.826Z"
+last_activity: 2026-03-13 — Roadmap created, phases derived from requirements
+progress:
+  total_phases: 3
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 1
+  percent: 50
+---
+
 # Project State
 
 ## Project Reference
@@ -14,7 +30,7 @@ Plan: 0 of ? in current phase
 Status: Ready to plan
 Last activity: 2026-03-13 — Roadmap created, phases derived from requirements
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -34,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-build-recovery P01 | 1min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -46,6 +63,9 @@ Recent decisions affecting current work:
 - [Pre-Phase 1]: tsconfig JSX must change to `"jsx": "react"` + `"jsxFactory": "h"` for cfp esbuild compatibility
 - [Pre-Phase 1]: All messaging must use cfp `emit`/`on` — no raw `postMessage` anywhere in `src/ui/`
 - [Pre-Phase 1]: cfp Dropdown cannot carry color data — color badge must be rendered as a separate element
+- [Phase 01-build-recovery]: postToPlugin wrapper preserves { type: X, ...data } call signature so child components compile without changes
+- [Phase 01-build-recovery]: App.tsx uses direct emit<Handler>; postToPlugin hook kept only for child components
+- [Phase 01-build-recovery]: UI_READY emitted after all on<Handler> registrations to avoid race condition with plugin responses
 
 ### Pending Todos
 
@@ -58,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13
-Stopped at: Roadmap created, STATE.md initialized — ready to plan Phase 1
+Last session: 2026-03-13T07:21:59.824Z
+Stopped at: Completed 01-build-recovery/01-01-PLAN.md
 Resume file: None
