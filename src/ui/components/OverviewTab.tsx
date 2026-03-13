@@ -1,5 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { Button, Dropdown, Textbox } from "@create-figma-plugin/ui";
+import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { AnnotationInfo, SchemaStore } from "@shared/types";
 import { OverviewRow } from "./OverviewRow";
 import { postToPlugin } from "../hooks/usePluginMessage";
@@ -10,6 +12,8 @@ interface OverviewTabProps {
   categories: { id: string; label: string; color: string }[];
   onEdit: (nodeId: string) => void;
 }
+
+const ALL = "__all__";
 
 export function OverviewTab({ annotations, schemas, categories, onEdit }: OverviewTabProps) {
   const [search, setSearch] = useState("");
@@ -103,6 +107,14 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
     URL.revokeObjectURL(url);
   };
 
+  const filterOptions: DropdownOption[] = [
+    { value: ALL, text: "All" },
+    ...categoryIds.map((catId) => ({
+      value: catId,
+      text: schemas[catId]?.categoryLabel ?? catId,
+    })),
+  ];
+
   if (annotations.length === 0) {
     return (
       <div className="tab-content">
@@ -130,38 +142,21 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
           {filtered.length} annotation{filtered.length !== 1 ? "s" : ""}
         </span>
         <div style={{ display: "flex", gap: 4 }}>
-          <button className="btn btn-secondary" onClick={() => handleExport("json")} style={{ fontSize: 10 }}>
-            JSON
-          </button>
-          <button className="btn btn-secondary" onClick={() => handleExport("csv")} style={{ fontSize: 10 }}>
-            CSV
-          </button>
+          <Button secondary onClick={() => handleExport("json")}>JSON</Button>
+          <Button secondary onClick={() => handleExport("csv")}>CSV</Button>
         </div>
       </div>
 
       <div className="search-bar">
-        <select
-          className="select"
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter((e.target as HTMLSelectElement).value)}
-          style={{ width: 120 }}
-        >
-          <option value="">All</option>
-          {categoryIds.map((catId) => {
-            const label = schemas[catId]?.categoryLabel ?? catId;
-            return (
-              <option key={catId} value={catId}>
-                {label}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          className="input"
-          placeholder="Search..."
+        <Dropdown
+          value={categoryFilter || ALL}
+          options={filterOptions}
+          onValueChange={(val) => setCategoryFilter(val === ALL ? "" : val)}
+        />
+        <Textbox
           value={search}
-          onChange={(e) => setSearch((e.target as HTMLInputElement).value)}
-          style={{ flex: 1 }}
+          onValueInput={(val) => setSearch(val)}
+          placeholder="Search..."
         />
       </div>
 
