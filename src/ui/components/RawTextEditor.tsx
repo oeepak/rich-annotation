@@ -1,4 +1,4 @@
-import React from "react";
+import { TextboxMultiline } from "@create-figma-plugin/ui";
 
 interface RawTextEditorProps {
   value: string;
@@ -7,18 +7,15 @@ interface RawTextEditorProps {
 
 export function RawTextEditor({ value, onChange }: RawTextEditorProps) {
   return (
-    <div className="section">
-      <div className="section-label">Raw Text Mode</div>
-      <textarea
-        className="input"
+    <>
+      <TextboxMultiline
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onValueInput={(val: string) => onChange(val)}
         rows={8}
-        style={{ fontFamily: "monospace", fontSize: 11 }}
       />
       <div style={{ fontSize: 10, color: "#999", marginTop: 4 }}>
         Leave raw text as-is or apply schema parsing.
       </div>
-    </div>
+    </>
   );
 }

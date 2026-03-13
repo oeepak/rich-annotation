@@ -23,6 +23,7 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
       <div className="field-group">
         <div className="field-label">
           {schema.name}
+          {schema.required && <span className="required"> *</span>}
         </div>
         <select
           className={`select${errorClass}`}
@@ -43,6 +44,7 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
       <div className="field-group">
         <div className="field-label">
           {schema.name}
+          {schema.required && <span className="required"> *</span>}
         </div>
         <select
           className={`select${errorClass}`}

@@ -40,7 +40,3 @@ export interface AnnotationInfo {
   parsedFields: ParsedField[];
   parseMatch: ParseMatch;
 }
-
-export interface FieldValues {
-  [fieldName: string]: string;
-}

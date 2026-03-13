@@ -1,13 +1,9 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
+import { render } from "@create-figma-plugin/ui";
+import { h } from "preact";
 import { App } from "./App";
-import { postToPlugin } from "./hooks/usePluginMessage";
-import "./styles/global.css";
 
-const root = createRoot(document.getElementById("root")!);
-root.render(<App />);
+function Plugin() {
+  return <App />;
+}
 
-// Request initial data
-postToPlugin({ type: "INIT" });
-postToPlugin({ type: "GET_SCHEMAS" });
-postToPlugin({ type: "GET_CATEGORIES" });
+export default render(Plugin);

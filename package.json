@@ -1,44 +1,37 @@
 {
   "name": "rich-annotation",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
+  "private": true,
+  "figma-plugin": {
+    "id": "rich-annotation-dev",
+    "name": "Rich Annotation",
+    "editorType": ["figma", "dev"],
+    "capabilities": ["inspect"],
+    "documentAccess": "dynamic-page",
+    "networkAccess": {
+      "allowedDomains": ["none"]
+    },
+    "main": "src/plugin/code.ts",
+    "ui": "src/ui/main.tsx"
   },
   "scripts": {
-    "build:ui": "vite build",
-    "build:plugin": "node esbuild.config.mjs",
-    "build": "npm run build:plugin && npm run build:ui",
-    "watch:ui": "vite build --watch",
-    "watch:plugin": "node esbuild.config.mjs --watch",
+    "build": "build-figma-plugin --typecheck --minify",
+    "watch": "build-figma-plugin --typecheck --watch",
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/oeepak/rich-annotation.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/oeepak/rich-annotation/issues"
-  },
-  "homepage": "https://github.com/oeepak/rich-annotation#readme",
   "dependencies": {
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "preact": "^10.29.0"
   },
   "devDependencies": {
+    "@create-figma-plugin/build": "^4.0.3",
+    "@create-figma-plugin/ui": "^4.0.3",
+    "@create-figma-plugin/utilities": "^4.0.3",
     "@figma/plugin-typings": "^1.123.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.4",
-    "esbuild": "^0.27.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/preact": "^3.2.4",
+    "jsdom": "^28.1.0",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vite-plugin-singlefile": "^2.3.0",
     "vitest": "^4.0.18"
   }
 }

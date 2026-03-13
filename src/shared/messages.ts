@@ -1,43 +1,95 @@
+import { EventHandler } from "@create-figma-plugin/utilities";
 import type {
   SchemaStore,
   AnnotationInfo,
-  FieldValues,
   FieldData,
-  CategorySchema,
 } from "./types";
 
-// UI → Plugin messages
-export type UIMessage =
-  | { type: "INIT" }
-  | { type: "GET_SELECTION" }
-  | { type: "GET_ANNOTATIONS" }
-  | { type: "GET_SCHEMAS" }
-  | { type: "SAVE_SCHEMAS"; schemas: SchemaStore }
-  | {
-      type: "APPLY_ANNOTATION";
-      nodeId: string;
-      categoryId: string;
-      text: string;
-      fieldData: FieldData;
-    }
-  | { type: "DELETE_ANNOTATION"; nodeId: string; categoryId: string }
-  | { type: "SELECT_NODE"; nodeId: string }
-  | { type: "GET_CATEGORIES" };
+// Plugin → UI
+export interface SelectionChangedHandler extends EventHandler {
+  name: "SELECTION_CHANGED";
+  handler: (data: {
+    nodeId: string | null;
+    nodeName: string;
+    nodeType: string;
+    annotations: AnnotationInfo[];
+  }) => void;
+}
 
-// Plugin → UI messages
-export type PluginMessage =
-  | {
-      type: "SELECTION_CHANGED";
-      nodeId: string | null;
-      nodeName: string;
-      nodeType: string;
-      annotations: AnnotationInfo[];
-    }
-  | { type: "SCHEMAS_LOADED"; schemas: SchemaStore }
-  | { type: "ANNOTATIONS_LIST"; annotations: AnnotationInfo[] }
-  | {
-      type: "CATEGORIES_LIST";
-      categories: { id: string; label: string; color: string }[];
-    }
-  | { type: "ANNOTATION_APPLIED" }
-  | { type: "ANNOTATION_DELETED" };
+export interface SchemasLoadedHandler extends EventHandler {
+  name: "SCHEMAS_LOADED";
+  handler: (data: { schemas: SchemaStore }) => void;
+}
+
+export interface AnnotationsListHandler extends EventHandler {
+  name: "ANNOTATIONS_LIST";
+  handler: (data: { annotations: AnnotationInfo[] }) => void;
+}
+
+export interface CategoriesListHandler extends EventHandler {
+  name: "CATEGORIES_LIST";
+  handler: (data: {
+    categories: { id: string; label: string; color: string }[];
+  }) => void;
+}
+
+export interface AnnotationAppliedHandler extends EventHandler {
+  name: "ANNOTATION_APPLIED";
+  handler: () => void;
+}
+
+export interface AnnotationDeletedHandler extends EventHandler {
+  name: "ANNOTATION_DELETED";
+  handler: () => void;
+}
+
+// UI → Plugin
+export interface GetAnnotationsHandler extends EventHandler {
+  name: "GET_ANNOTATIONS";
+  handler: () => void;
+}
+
+export interface GetSchemasHandler extends EventHandler {
+  name: "GET_SCHEMAS";
+  handler: () => void;
+}
+
+export interface SaveSchemasHandler extends EventHandler {
+  name: "SAVE_SCHEMAS";
+  handler: (data: { schemas: SchemaStore }) => void;
+}
+
+export interface ApplyAnnotationHandler extends EventHandler {
+  name: "APPLY_ANNOTATION";
+  handler: (data: {
+    nodeId: string;
+    categoryId: string;
+    text: string;
+    fieldData: FieldData;
+  }) => void;
+}
+
+export interface DeleteAnnotationHandler extends EventHandler {
+  name: "DELETE_ANNOTATION";
+  handler: (data: { nodeId: string; categoryId: string }) => void;
+}
+
+export interface SelectNodeHandler extends EventHandler {
+  name: "SELECT_NODE";
+  handler: (data: { nodeId: string }) => void;
+}
+
+export interface NavigateToNodeHandler extends EventHandler {
+  name: "NAVIGATE_TO_NODE";
+  handler: (data: { nodeId: string }) => void;
+}
+
+export interface GetCategoriesHandler extends EventHandler {
+  name: "GET_CATEGORIES";
+  handler: () => void;
+}
+
+export interface UIReadyHandler extends EventHandler {
+  name: "UI_READY";
+  handler: () => void;
+}

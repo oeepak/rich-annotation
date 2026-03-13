@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import type { FieldSchema, FieldData, ParsedField } from "@shared/types";
-import { buildText } from "@shared/buildText";
-import { parseText } from "@shared/parseText";
-import { validateField } from "@shared/validateField";
+import { useState, useEffect } from "preact/hooks";
+import type { FieldSchema, FieldData, ParsedField } from "../../shared/types";
+import { buildText } from "../../shared/buildText";
+import { parseText } from "../../shared/parseText";
+import { validateField } from "../../shared/validateField";
 
 interface UseSelectionFieldsOptions {
   label: string;
@@ -66,7 +66,6 @@ export function useSelectionFields({ label, fieldData, schemaFields }: UseSelect
 
   const previewText = buildText(schemaFields, fieldValues);
 
-  // Build fieldData for pluginData storage
   const currentFieldData: FieldData = {};
   for (const schema of schemaFields) {
     currentFieldData[schema.name] = fieldValues[schema.name] ?? (schema.type === "group" ? {} : "");
