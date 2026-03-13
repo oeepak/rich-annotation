@@ -1,4 +1,4 @@
-import React from "react";
+import { h } from 'preact';
 import type { FieldSchema } from "@shared/types";
 
 interface FieldInputProps {
@@ -23,12 +23,11 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
       <div className="field-group">
         <div className="field-label">
           {schema.name}
-          {schema.required && <span className="required"> *</span>}
         </div>
         <select
           className={`select${errorClass}`}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange((e.target as HTMLSelectElement).value)}
         >
           <option value="">—</option>
           {(schema.options ?? []).map((opt) => (
@@ -44,12 +43,11 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
       <div className="field-group">
         <div className="field-label">
           {schema.name}
-          {schema.required && <span className="required"> *</span>}
         </div>
         <select
           className={`select${errorClass}`}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange((e.target as HTMLSelectElement).value)}
         >
           <option value="">—</option>
           <option value="true">true</option>
@@ -64,13 +62,12 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
     <div className="field-group">
       <div className="field-label">
         {schema.name}
-        {schema.required && <span className="required"> *</span>}
       </div>
       <input
         className={`input${errorClass}`}
         type={schema.type === "number" ? "number" : "text"}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange((e.target as HTMLInputElement).value)}
       />
     </div>
   );
@@ -81,7 +78,6 @@ export function GroupFieldInput({ schema, values, childMatches, onChildChange }:
     <div className="field-group">
       <div className="field-label">
         {schema.name}
-        {schema.required && <span className="required"> *</span>}
       </div>
       <div style={{ marginLeft: 12 }}>
         {(schema.children ?? []).map((child) => (

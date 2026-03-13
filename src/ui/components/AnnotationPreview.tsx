@@ -1,4 +1,4 @@
-import React from "react";
+import { h } from 'preact';
 import type { ParsedField } from "@shared/types";
 
 interface AnnotationPreviewProps {

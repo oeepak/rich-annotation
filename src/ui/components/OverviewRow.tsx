@@ -1,4 +1,4 @@
-import React from "react";
+import { h } from 'preact';
 import type { AnnotationInfo } from "@shared/types";
 import { postToPlugin } from "../hooks/usePluginMessage";
 

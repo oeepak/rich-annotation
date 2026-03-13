@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { h } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
 import type { SchemaStore, AnnotationInfo, CategorySchema } from "@shared/types";
 import { FieldInput, GroupFieldInput } from "./FieldInput";
 import { AnnotationPreview } from "./AnnotationPreview";
@@ -95,7 +96,7 @@ export function SelectedTab({
             className="select"
             value={selectedCategoryId}
             onChange={(e) => {
-              setSelectedCategoryId(e.target.value);
+              setSelectedCategoryId((e.target as HTMLSelectElement).value);
               setRawMode(false);
             }}
           >

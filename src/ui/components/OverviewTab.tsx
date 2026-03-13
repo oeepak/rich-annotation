@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { h } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
 import type { AnnotationInfo, SchemaStore } from "@shared/types";
 import { OverviewRow } from "./OverviewRow";
 import { postToPlugin } from "../hooks/usePluginMessage";
@@ -142,7 +143,7 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
         <select
           className="select"
           value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          onChange={(e) => setCategoryFilter((e.target as HTMLSelectElement).value)}
           style={{ width: 120 }}
         >
           <option value="">All</option>
@@ -159,7 +160,7 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
           className="input"
           placeholder="Search..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearch((e.target as HTMLInputElement).value)}
           style={{ flex: 1 }}
         />
       </div>

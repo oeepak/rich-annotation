@@ -1,4 +1,4 @@
-import React from "react";
+import { h } from 'preact';
 import type { CategorySchema, FieldSchema } from "@shared/types";
 import { SchemaFieldRow, FieldOptionsEditor } from "./SchemaFieldRow";
 

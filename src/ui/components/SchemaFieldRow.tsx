@@ -1,4 +1,4 @@
-import React from "react";
+import { h } from 'preact';
 import type { FieldSchema, FieldType } from "@shared/types";
 
 interface SchemaFieldRowProps {
@@ -16,14 +16,14 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
         className="input"
         placeholder="field name"
         value={field.name}
-        onChange={(e) => onChange({ ...field, name: e.target.value })}
+        onChange={(e) => onChange({ ...field, name: (e.target as HTMLInputElement).value })}
         style={{ flex: 2 }}
       />
       <select
         className="select"
         value={field.type}
         onChange={(e) => {
-          const newType = e.target.value as FieldType;
+          const newType = (e.target as HTMLSelectElement).value as FieldType;
           onChange({
             ...field,
             type: newType,
@@ -41,7 +41,7 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
         <input
           type="checkbox"
           checked={field.required}
-          onChange={(e) => onChange({ ...field, required: e.target.checked })}
+          onChange={(e) => onChange({ ...field, required: (e.target as HTMLInputElement).checked })}
         />
         req
       </label>
@@ -68,7 +68,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
           onChange={(e) =>
             onChange({
               ...field,
-              options: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+              options: (e.target as HTMLInputElement).value.split(",").map((s: string) => s.trim()).filter(Boolean),
             })
           }
           placeholder="A, B, C"
@@ -109,14 +109,14 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
                 className="input"
                 placeholder="child name"
                 value={child.name}
-                onChange={(e) => updateChild(i, { ...child, name: e.target.value })}
+                onChange={(e) => updateChild(i, { ...child, name: (e.target as HTMLInputElement).value })}
                 style={{ flex: 2 }}
               />
               <select
                 className="select"
                 value={child.type}
                 onChange={(e) => {
-                  const t = e.target.value as FieldType;
+                  const t = (e.target as HTMLSelectElement).value as FieldType;
                   updateChild(i, {
                     ...child,
                     type: t,
@@ -133,7 +133,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
                 <input
                   type="checkbox"
                   checked={child.required}
-                  onChange={(e) => updateChild(i, { ...child, required: e.target.checked })}
+                  onChange={(e) => updateChild(i, { ...child, required: (e.target as HTMLInputElement).checked })}
                 />
                 req
               </label>
@@ -150,7 +150,7 @@ export function FieldOptionsEditor({ field, onChange }: FieldOptionsEditorProps)
                   onChange={(e) =>
                     updateChild(i, {
                       ...child,
-                      options: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                      options: (e.target as HTMLInputElement).value.split(",").map((s: string) => s.trim()).filter(Boolean),
                     })
                   }
                   placeholder="A, B, C"

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { h } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
 import type { SchemaStore, CategorySchema } from "@shared/types";
 import { SchemaCategory } from "./SchemaCategory";
 import { postToPlugin } from "../hooks/usePluginMessage";
@@ -71,7 +72,7 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
               <select
                 className="select"
                 value={selectedCategoryId}
-                onChange={(e) => setSelectedCategoryId(e.target.value)}
+                onChange={(e) => setSelectedCategoryId((e.target as HTMLSelectElement).value)}
               >
                 <option value="">— Select Category —</option>
                 {categories.map((cat) => (
