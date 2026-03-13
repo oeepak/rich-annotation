@@ -2,13 +2,13 @@ import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Button, Dropdown } from "@create-figma-plugin/ui";
 import type { DropdownOption } from "@create-figma-plugin/ui";
-import type { SchemaStore, CategorySchema } from "@shared/types";
+import type { SchemaStore, CategorySchema, AnnotationCategory } from "@shared/types";
 import { SchemaCategory } from "./SchemaCategory";
 import { postToPlugin } from "../hooks/usePluginMessage";
 
 interface SchemaTabProps {
   schemas: SchemaStore;
-  categories: { id: string; label: string; color: string }[];
+  categories: AnnotationCategory[];
   onBack: () => void;
 }
 

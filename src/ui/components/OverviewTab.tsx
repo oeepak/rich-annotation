@@ -2,14 +2,14 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Button, Dropdown, Textbox } from "@create-figma-plugin/ui";
 import type { DropdownOption } from "@create-figma-plugin/ui";
-import type { AnnotationInfo, SchemaStore } from "@shared/types";
+import type { AnnotationInfo, SchemaStore, AnnotationCategory } from "@shared/types";
 import { OverviewRow } from "./OverviewRow";
 import { postToPlugin } from "../hooks/usePluginMessage";
 
 interface OverviewTabProps {
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
-  categories: { id: string; label: string; color: string }[];
+  categories: AnnotationCategory[];
   onEdit: (nodeId: string) => void;
 }
 

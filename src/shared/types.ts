@@ -40,3 +40,9 @@ export interface AnnotationInfo {
   parsedFields: ParsedField[];
   parseMatch: ParseMatch;
 }
+
+export interface AnnotationCategory {
+  id: string;
+  label: string;
+  color: string;
+}

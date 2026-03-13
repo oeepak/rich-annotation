@@ -2,7 +2,7 @@ import { useState, useEffect } from "preact/hooks";
 import type { FieldSchema, FieldData, ParsedField } from "../../shared/types";
 import { buildText } from "../../shared/buildText";
 import { parseText } from "../../shared/parseText";
-import { validateField } from "../../shared/validateField";
+import { buildParsedFieldsFromData } from "../../shared/buildParsedFieldsFromData";
 
 interface UseSelectionFieldsOptions {
   label: string;
@@ -71,24 +71,7 @@ export function useSelectionFields({ label, fieldData, schemaFields }: UseSelect
     currentFieldData[schema.name] = fieldValues[schema.name] ?? (schema.type === "group" ? {} : "");
   }
 
-  const parsedFields: ParsedField[] = schemaFields.map((s) => {
-    if (s.type === "group") {
-      const groupValues = (typeof fieldValues[s.name] === "object"
-        ? fieldValues[s.name]
-        : {}) as GroupValues;
-      const children: ParsedField[] = (s.children ?? []).map((child) => {
-        const raw = groupValues[child.name] ?? "";
-        const { parsedValue, matched } = validateField(raw, child);
-        return { name: child.name, rawValue: raw, parsedValue, matched };
-      });
-      const groupMatched = children.every((c) => c.matched);
-      return { name: s.name, rawValue: "", parsedValue: null, matched: groupMatched, children };
-    }
-
-    const raw = (fieldValues[s.name] ?? "") as string;
-    const { parsedValue, matched } = validateField(raw, s);
-    return { name: s.name, rawValue: raw, parsedValue, matched };
-  });
+  const parsedFields: ParsedField[] = buildParsedFieldsFromData(currentFieldData, schemaFields);
 
   const allMatched = parsedFields.every((f) => f.matched);
 

@@ -17,14 +17,14 @@ import type {
   SelectNodeHandler,
   UIReadyHandler,
 } from "@shared/messages";
-import type { SchemaStore, AnnotationInfo } from "@shared/types";
+import type { SchemaStore, AnnotationInfo, AnnotationCategory } from "@shared/types";
 
 type View = "auto" | "schema";
 
 export function App() {
   const [view, setView] = useState<View>("auto");
   const [schemas, setSchemas] = useState<SchemaStore>({});
-  const [categories, setCategories] = useState<{ id: string; label: string; color: string }[]>([]);
+  const [categories, setCategories] = useState<AnnotationCategory[]>([]);
 
   // Selection state
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);

@@ -1,5 +1,6 @@
 import { emit, on, showUI } from "@create-figma-plugin/utilities";
-import type { SchemaStore, AnnotationInfo, FieldSchema, FieldData, ParsedField, ParseMatch } from "../shared/types";
+import type { SchemaStore, AnnotationInfo, FieldData, ParsedField, ParseMatch, AnnotationCategory } from "../shared/types";
+import { buildParsedFieldsFromData } from "../shared/buildParsedFieldsFromData";
 import type {
   SelectionChangedHandler,
   SchemasLoadedHandler,
@@ -19,7 +20,6 @@ import type {
 } from "../shared/messages";
 import { parseText } from "../shared/parseText";
 import { buildText } from "../shared/buildText";
-import { validateField } from "../shared/validateField";
 
 const SCHEMA_KEY = "rich-annotation-schemas";
 function annotationDataKey(categoryId: string) {
@@ -42,7 +42,7 @@ function saveSchemas(schemas: SchemaStore): void {
   figma.root.setPluginData(SCHEMA_KEY, JSON.stringify(schemas));
 }
 
-let cachedCategories: { id: string; label: string; color: string }[] = [];
+let cachedCategories: AnnotationCategory[] = [];
 
 async function ensureCategoriesLoaded(): Promise<void> {
   if (cachedCategories.length === 0) {
@@ -108,36 +108,6 @@ function buildAnnotationInfo(
     parsedFields,
     parseMatch,
   };
-}
-
-function buildParsedFieldsFromData(
-  data: FieldData,
-  schemaFields: FieldSchema[]
-): ParsedField[] {
-  return schemaFields.map((schema) => {
-    const raw = data[schema.name];
-
-    if (schema.type === "group") {
-      const groupData = (typeof raw === "object" ? raw : {}) as Record<string, string>;
-      const children = (schema.children ?? []).map((child) => {
-        const childRaw = groupData[child.name] ?? "";
-        const { parsedValue, matched } = validateField(childRaw, child);
-        return { name: child.name, rawValue: childRaw, parsedValue, matched };
-      });
-      const groupMatched = children.every((c) => c.matched);
-      return {
-        name: schema.name,
-        rawValue: "",
-        parsedValue: null,
-        matched: groupMatched,
-        children,
-      };
-    }
-
-    const rawValue = (typeof raw === "string" ? raw : "") as string;
-    const { parsedValue, matched } = validateField(rawValue, schema);
-    return { name: schema.name, rawValue, parsedValue, matched };
-  });
 }
 
 function getAnnotationsForPage(): AnnotationInfo[] {

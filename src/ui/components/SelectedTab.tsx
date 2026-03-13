@@ -2,7 +2,7 @@ import { h, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Button, Dropdown } from "@create-figma-plugin/ui";
 import type { DropdownOption } from "@create-figma-plugin/ui";
-import type { SchemaStore, AnnotationInfo, CategorySchema } from "@shared/types";
+import type { SchemaStore, AnnotationInfo, CategorySchema, AnnotationCategory } from "@shared/types";
 import { FieldInput, GroupFieldInput } from "./FieldInput";
 import { AnnotationPreview } from "./AnnotationPreview";
 import { RawTextEditor } from "./RawTextEditor";
@@ -15,7 +15,7 @@ interface SelectedTabProps {
   nodeType: string;
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
-  categories: { id: string; label: string; color: string }[];
+  categories: AnnotationCategory[];
   onGoToSchema: () => void;
 }
 
