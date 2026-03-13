@@ -12,7 +12,7 @@ The plugin is currently in a broken intermediate state after a partial React-to-
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Build Recovery** - Restore the broken build to a compiling, runnable state using cfp patterns
+- [x] **Phase 1: Build Recovery** - Restore the broken build to a compiling, runnable state using cfp patterns (completed 2026-03-13)
 - [ ] **Phase 2: Migration + Cleanup** - Replace all native HTML form elements with cfp UI components and remove code debt
 - [ ] **Phase 3: Testing** - Cover shared logic, plugin handlers, and all UI components with unit and component tests
 
@@ -27,7 +27,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Plugin loads in Figma and all three tabs (Selected, Overview, Schema) are accessible
   3. Annotating a node and reading it back works end-to-end via the cfp emit/on messaging path
   4. No `from "react"` imports remain anywhere in `src/ui/`
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 01-01-PLAN.md — Fix tsconfig, create usePluginMessage hook, rewrite App.tsx with cfp messaging
 - [ ] 01-02-PLAN.md — Fix React imports in all 8 components, cast e.target types, remove schema.required, fix test file, verify full build
@@ -62,6 +62,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Build Recovery | 1/2 | In Progress|  |
+| 1. Build Recovery | 2/2 | Complete   | 2026-03-13 |
 | 2. Migration + Cleanup | 0/? | Not started | - |
 | 3. Testing | 0/? | Not started | - |
