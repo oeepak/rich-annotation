@@ -5,6 +5,7 @@ import type { SchemaStore, CategorySchema, AnnotationCategory } from "@shared/ty
 import { CategoryDropdown } from "./CategoryDropdown";
 import { SchemaCategory } from "./SchemaCategory";
 import { postToPlugin } from "../hooks/usePluginMessage";
+import styles from "../styles";
 
 interface SchemaTabProps {
   schemas: SchemaStore;
@@ -59,9 +60,9 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
 
   return (
     <>
-      <div className="tab-content">
+      <div className={styles.tabContent}>
         {categories.length === 0 ? (
-          <div className="empty-state">
+          <div className={styles.emptyState}>
             <div>No annotation categories available.</div>
             <div style={{ fontSize: 11 }}>
               Categories are defined in Figma's annotation settings.
@@ -69,8 +70,8 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
           </div>
         ) : (
           <>
-            <div className="section">
-              <div className="section-label">Category</div>
+            <div className={styles.section}>
+              <div className={styles.sectionLabel}>Category</div>
               <CategoryDropdown
                 categories={categories}
                 value={selectedCategoryId}
@@ -90,7 +91,7 @@ export function SchemaTab({ schemas, categories, onBack }: SchemaTabProps) {
           Used to build / parse annotation text
         </div>
       </div>
-      <div className="action-bar">
+      <div className={styles.actionBar}>
         <div style={{ display: "flex", gap: 6 }}>
           <Button secondary onClick={onBack}>Back</Button>
           <Button secondary onClick={handleReset} disabled={!dirty}>Reset</Button>

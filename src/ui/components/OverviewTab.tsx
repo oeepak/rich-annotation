@@ -5,17 +5,19 @@ import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { AnnotationInfo, SchemaStore, AnnotationCategory } from "@shared/types";
 import { OverviewRow } from "./OverviewRow";
 import { postToPlugin } from "../hooks/usePluginMessage";
+import styles from "../styles";
 
 interface OverviewTabProps {
   annotations: AnnotationInfo[];
   schemas: SchemaStore;
   categories: AnnotationCategory[];
+  onNavigate: (nodeId: string) => void;
   onEdit: (nodeId: string) => void;
 }
 
 const ALL = "__all__";
 
-export function OverviewTab({ annotations, schemas, categories, onEdit }: OverviewTabProps) {
+export function OverviewTab({ annotations, schemas, categories, onNavigate, onEdit }: OverviewTabProps) {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
 
@@ -117,11 +119,11 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
 
   if (annotations.length === 0) {
     return (
-      <div className="tab-content">
-        <div className="toolbar">
+      <div className={styles.tabContent}>
+        <div className={styles.toolbar}>
           <span style={{ fontSize: 11, color: "#999" }}>0 annotations</span>
         </div>
-        <div className="empty-state">
+        <div className={styles.emptyState}>
           <div style={{ fontWeight: 500 }}>No annotations on this page</div>
           <div>
             Select a node and create a category-based annotation from the
@@ -136,8 +138,8 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
   }
 
   return (
-    <div className="tab-content">
-      <div className="toolbar">
+    <div className={styles.tabContent}>
+      <div className={styles.toolbar}>
         <span style={{ fontSize: 11, color: "#999" }}>
           {filtered.length} annotation{filtered.length !== 1 ? "s" : ""}
         </span>
@@ -147,7 +149,7 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
         </div>
       </div>
 
-      <div className="search-bar">
+      <div className={styles.searchBar}>
         <Dropdown
           value={categoryFilter || ALL}
           options={filterOptions}
@@ -167,6 +169,7 @@ export function OverviewTab({ annotations, schemas, categories, onEdit }: Overvi
             key={`${ann.nodeId}-${ann.categoryId}-${i}`}
             annotation={ann}
             categoryColor={cat?.color}
+            onNavigate={() => onNavigate(ann.nodeId)}
             onEdit={() => onEdit(ann.nodeId)}
           />
         );

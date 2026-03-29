@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { Button } from "@create-figma-plugin/ui";
 import type { AnnotationInfo } from "@shared/types";
 import { postToPlugin } from "../hooks/usePluginMessage";
+import styles from "../styles";
 
 const COLOR_MAP: Record<string, { bg: string; fg: string }> = {
   yellow: { bg: "#f5a623", fg: "#fff" },
@@ -17,10 +18,11 @@ const COLOR_MAP: Record<string, { bg: string; fg: string }> = {
 interface OverviewRowProps {
   annotation: AnnotationInfo;
   categoryColor?: string;
+  onNavigate: () => void;
   onEdit: () => void;
 }
 
-export function OverviewRow({ annotation, categoryColor, onEdit }: OverviewRowProps) {
+export function OverviewRow({ annotation, categoryColor, onNavigate, onEdit }: OverviewRowProps) {
 
   const colors = categoryColor ? COLOR_MAP[categoryColor.toLowerCase()] : undefined;
   const badgeStyle = colors
@@ -28,16 +30,16 @@ export function OverviewRow({ annotation, categoryColor, onEdit }: OverviewRowPr
     : undefined;
 
   return (
-    <div className="row-card">
-      <div className="row-header">
-        <span className="badge" style={badgeStyle}>
+    <div className={styles.rowCard} onClick={onNavigate}>
+      <div className={styles.rowHeader}>
+        <span className={styles.badge} style={badgeStyle}>
           {annotation.categoryLabel || "—"}
         </span>
         <span style={{ fontWeight: 500, flex: 1 }}>{annotation.nodeName}</span>
-        <Button secondary onClick={onEdit}>Edit</Button>
+        <Button secondary onClick={(e: Event) => { e.stopPropagation(); onEdit(); }}>Edit</Button>
       </div>
       {annotation.label && (
-        <div className="row-body">
+        <div className={styles.rowBody}>
           {annotation.label}
         </div>
       )}

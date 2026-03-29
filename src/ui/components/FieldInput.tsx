@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { Textbox, TextboxNumeric, Dropdown, Checkbox } from "@create-figma-plugin/ui";
 import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { FieldSchema } from "@shared/types";
+import styles from "../styles";
 
 interface FieldInputProps {
   schema: FieldSchema;
@@ -26,13 +27,13 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
       ...(schema.options ?? []).map((opt) => ({ value: opt, text: opt })),
     ];
     return (
-      <div className="field-group">
-        <div className="field-label">
+      <div className={styles.fieldGroup}>
+        <div className={styles.fieldLabel}>
           {schema.name}
         </div>
         <Dropdown value={value || null} options={options} onValueChange={(val) => onChange(val)} placeholder="—" />
         {showError && (
-          <div className="field-error" style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
+          <div style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
             Not a valid option
           </div>
         )}
@@ -42,7 +43,7 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
 
   if (schema.type === "boolean") {
     return (
-      <div className="field-group">
+      <div className={styles.fieldGroup}>
         <Checkbox value={value === "true"} onValueChange={(val: boolean) => onChange(val ? "true" : "false")}>
           {schema.name}
         </Checkbox>
@@ -52,13 +53,13 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
 
   if (schema.type === "number") {
     return (
-      <div className="field-group">
-        <div className="field-label">
+      <div className={styles.fieldGroup}>
+        <div className={styles.fieldLabel}>
           {schema.name}
         </div>
         <TextboxNumeric value={value} onValueInput={(val) => onChange(val)} />
         {showError && (
-          <div className="field-error" style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
+          <div style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
             Type mismatch
           </div>
         )}
@@ -68,13 +69,13 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
 
   // text (default)
   return (
-    <div className="field-group">
-      <div className="field-label">
+    <div className={styles.fieldGroup}>
+      <div className={styles.fieldLabel}>
         {schema.name}
       </div>
       <Textbox value={value} onValueInput={(val) => onChange(val)} />
       {showError && (
-        <div className="field-error" style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
+        <div style={{ color: "#f24822", fontSize: 10, marginTop: 2 }}>
           Type mismatch
         </div>
       )}
@@ -84,8 +85,8 @@ export function FieldInput({ schema, value, matched, onChange }: FieldInputProps
 
 export function GroupFieldInput({ schema, values, childMatches, onChildChange }: GroupFieldInputProps) {
   return (
-    <div className="field-group">
-      <div className="field-label">
+    <div className={styles.fieldGroup}>
+      <div className={styles.fieldLabel}>
         {schema.name}
       </div>
       <div style={{ marginLeft: 12 }}>

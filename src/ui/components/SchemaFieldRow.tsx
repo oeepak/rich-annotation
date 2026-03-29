@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { Button, Textbox, Dropdown } from "@create-figma-plugin/ui";
 import type { DropdownOption } from "@create-figma-plugin/ui";
 import type { FieldSchema, FieldType } from "@shared/types";
+import styles from "../styles";
 
 interface SchemaFieldRowProps {
   field: FieldSchema;
@@ -15,7 +16,7 @@ export function SchemaFieldRow({ field, onChange, onDelete }: SchemaFieldRowProp
   const typeOptions: DropdownOption[] = fieldTypes.map((t) => ({ value: t, text: t }));
 
   return (
-    <div className="schema-field-row">
+    <div className={styles.schemaFieldRow}>
       <div style={{ flex: 2 }}>
         <Textbox
           value={field.name}

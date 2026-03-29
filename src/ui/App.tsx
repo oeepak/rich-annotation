@@ -4,6 +4,7 @@ import { on, emit } from '@create-figma-plugin/utilities'
 import { OverviewTab } from "./components/OverviewTab";
 import { SelectedTab } from "./components/SelectedTab";
 import { SchemaTab } from "./components/SchemaTab";
+import styles from "./styles";
 import type {
   SelectionChangedHandler,
   SchemasLoadedHandler,
@@ -15,6 +16,7 @@ import type {
   GetSchemasHandler,
   GetCategoriesHandler,
   SelectNodeHandler,
+  NavigateToNodeHandler,
   UIReadyHandler,
 } from "@shared/messages";
 import type { SchemaStore, AnnotationInfo, AnnotationCategory } from "@shared/types";
@@ -93,7 +95,7 @@ export function App() {
   // Schema view
   if (view === "schema") {
     return (
-      <div className="plugin-container">
+      <div className={styles.pluginContainer}>
         <SchemaTab
           schemas={schemas}
           categories={categories}
@@ -106,11 +108,14 @@ export function App() {
   // Auto view: no selection → overview, selection → selected
   if (!selectedNodeId) {
     return (
-      <div className="plugin-container">
+      <div className={styles.pluginContainer}>
         <OverviewTab
           annotations={pageAnnotations}
           schemas={schemas}
           categories={categories}
+          onNavigate={(nodeId) => {
+            emit<NavigateToNodeHandler>('NAVIGATE_TO_NODE', { nodeId });
+          }}
           onEdit={(nodeId) => {
             emit<SelectNodeHandler>('SELECT_NODE', { nodeId });
           }}
@@ -120,7 +125,7 @@ export function App() {
   }
 
   return (
-    <div className="plugin-container">
+    <div className={styles.pluginContainer}>
       <SelectedTab
         nodeId={selectedNodeId}
         nodeName={selectedNodeName}

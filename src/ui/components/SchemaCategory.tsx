@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { Button } from "@create-figma-plugin/ui";
 import type { CategorySchema, FieldSchema } from "@shared/types";
 import { SchemaFieldRow, FieldOptionsEditor } from "./SchemaFieldRow";
+import styles from "../styles";
 
 interface SchemaCategoryProps {
   schema: CategorySchema;
@@ -31,8 +32,8 @@ export function SchemaCategory({ schema, onChange }: SchemaCategoryProps) {
   };
 
   return (
-    <div className="schema-category">
-      <div className="schema-category-header">
+    <div className={styles.schemaCategory}>
+      <div className={styles.schemaCategoryHeader}>
         <strong>{schema.categoryLabel}</strong>
         <Button secondary onClick={addField}>+ Add</Button>
       </div>

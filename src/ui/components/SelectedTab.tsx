@@ -8,6 +8,7 @@ import { AnnotationPreview } from "./AnnotationPreview";
 import { RawTextEditor } from "./RawTextEditor";
 import { useSelectionFields } from "../hooks/useSelection";
 import { postToPlugin } from "../hooks/usePluginMessage";
+import styles from "../styles";
 
 interface SelectedTabProps {
   nodeId: string;
@@ -82,9 +83,9 @@ export function SelectedTab({
 
   return (
     <>
-      <div className="tab-content">
+      <div className={styles.tabContent}>
         {/* Node Info */}
-        <div className="section">
+        <div className={styles.section}>
           <div style={{ fontWeight: 600 }}>{nodeName}</div>
           <div style={{ fontSize: 11, color: "#999" }}>
             {nodeType} / {nodeId}
@@ -92,8 +93,8 @@ export function SelectedTab({
         </div>
 
         {/* Category Selection */}
-        <div className="section">
-          <div className="section-label">Category</div>
+        <div className={styles.section}>
+          <div className={styles.sectionLabel}>Category</div>
           <CategoryDropdown
             categories={categories}
             value={selectedCategoryId}
@@ -105,7 +106,7 @@ export function SelectedTab({
         </div>
 
         {selectedCategoryId && !hasSchema && (
-          <div className="section">
+          <div className={styles.section}>
             <div style={{ fontWeight: 500, marginBottom: 4 }}>No schema for this category</div>
             <div style={{ fontSize: 11, color: "#999", marginBottom: 8 }}>
               Define a schema to use structured fields.
@@ -120,8 +121,8 @@ export function SelectedTab({
         {selectedCategoryId && hasSchema && !rawMode && (
           <>
             {parseMatch === "not_matched" && (
-              <div className="section">
-                <span className="badge badge-not-matched">
+              <div className={styles.section}>
+                <span className={`${styles.badge} ${styles.badgeNotMatched}`}>
                   Not matched
                 </span>
                 <div style={{ fontSize: 11, color: "#d93025", marginTop: 4 }}>
@@ -135,9 +136,9 @@ export function SelectedTab({
             )}
 
             {/* Field Inputs */}
-            <div className="section">
+            <div className={styles.section}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div className="section-label">Fields</div>
+                <div className={styles.sectionLabel}>Fields</div>
                 <Button secondary onClick={onGoToSchema}>Schema</Button>
               </div>
               {schema.fields.map((field) => {
@@ -184,7 +185,7 @@ export function SelectedTab({
       </div>
 
       {selectedCategoryId && (
-        <div className="action-bar">
+        <div className={styles.actionBar}>
           <div style={{ display: "flex", gap: 6 }}>
             {(hasSchema || rawMode) && (
               <Button secondary onClick={() => setRawMode(!rawMode)}>
