@@ -2607,11 +2607,11 @@ git commit -m "chore: verify full build passes"
 
 ## Summary
 
-| Chunk | Tasks | What it delivers |
-|-------|-------|-----------------|
-| 1 | 1-3 | Project setup, build tooling, shared types |
-| 2 | 4-6 | validateField, buildText, parseText with tests |
-| 3 | 7 | Plugin sandbox (Figma API bridge) |
-| 4 | 8-9 | UI shell, tabs, styles, Schema tab |
-| 5 | 10 | Selected tab with fields, preview, raw text |
-| 6 | 11-12 | Overview tab with search/filter/export, final build |
+| Chunk | Tasks | What it delivers                                    |
+| ----- | ----- | --------------------------------------------------- |
+| 1     | 1-3   | Project setup, build tooling, shared types          |
+| 2     | 4-6   | validateField, buildText, parseText with tests      |
+| 3     | 7     | Plugin sandbox (Figma API bridge)                   |
+| 4     | 8-9   | UI shell, tabs, styles, Schema tab                  |
+| 5     | 10    | Selected tab with fields, preview, raw text         |
+| 6     | 11-12 | Overview tab with search/filter/export, final build |
